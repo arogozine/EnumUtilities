@@ -119,6 +119,15 @@ namespace EnumUtilTests
                 T value = values[i];
                 string name = names[i];
 
+                byte byteVal = EnumUtilBase<T>.ToByte(value);
+                sbyte sbyteVal = EnumUtilBase<T>.ToSByte(value);
+                short int16Val = EnumUtilBase<T>.ToInt16(value);
+                ushort uint16Val = EnumUtilBase<T>.ToUInt16(value);
+                int intVal = EnumUtilBase<T>.ToInt32(value);
+                uint uintVal = EnumUtilBase<T>.ToUInt32(value);
+                long longVal = EnumUtilBase<T>.ToInt64(value);
+                ulong val = EnumUtilBase<T>.ToUInt64(value);
+
                 Assert.IsTrue(EnumUtilBase<T>.BitwiseOr(value, value).Equals(value));
                 Assert.IsTrue(EnumUtilBase<T>.BitwiseAnd(value, value).Equals(value));
                 Assert.IsTrue(EnumUtilBase<T>.BitwiseExclusiveOr(value, value).Equals(default(T)));

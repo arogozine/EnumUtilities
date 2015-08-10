@@ -12,6 +12,14 @@ namespace EnumUtilities
     {
         #region Generate Functions
 
+        private static Func<T, Y> GenerateConvertTo<Y>() where Y : struct
+        {
+            var value = Expression.Parameter(typeof(T));
+            UnaryExpression ue = Expression.Convert(value, typeof(Y));
+            return Expression.Lambda<Func<T, Y>>(ue, value)
+                .Compile();
+        }
+
         private static Func<T, T, bool> GenerateHasFlag()
         {
             var value = Expression.Parameter(typeof(T));
@@ -84,6 +92,23 @@ namespace EnumUtilities
         public static readonly Func<T, T, T> BitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
 
         public static readonly Func<T, T, bool> HasFlag = GenerateHasFlag();
+
+        public static readonly Func<T, ulong> ToUInt64 = GenerateConvertTo<ulong>();
+
+        public static readonly Func<T, long> ToInt64 = GenerateConvertTo<long>();
+
+        public static readonly Func<T, uint> ToUInt32 = GenerateConvertTo<uint>();
+
+        public static readonly Func<T, int> ToInt32 = GenerateConvertTo<int>();
+
+        public static readonly Func<T, ushort> ToUInt16 = GenerateConvertTo<ushort>();
+
+        public static readonly Func<T, short> ToInt16 = GenerateConvertTo<short>();
+
+        public static readonly Func<T, byte> ToByte = GenerateConvertTo<byte>();
+
+        public static readonly Func<T, sbyte> ToSByte = GenerateConvertTo<sbyte>();
+
     }
 
 }

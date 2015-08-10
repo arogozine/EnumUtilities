@@ -116,5 +116,37 @@ namespace EnumUtilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetUnderlyingType<T>() where T : struct, E
             => Enum.GetUnderlyingType(typeof(T));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte ToByte<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToByte(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static sbyte ToSByte<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToSByte(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static short ToInt16<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToInt16(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ushort ToUInt16<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToUInt16(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ToInt32<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToInt32(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint ToUInt32<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToUInt32(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long ToInt64<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToInt64(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong ToUInt64<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToUInt64(val);
     }
 }
