@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EnumUtilities
 {
@@ -108,7 +104,5 @@ namespace EnumUtilities
         public static readonly Func<T, byte> ToByte = GenerateConvertTo<byte>();
 
         public static readonly Func<T, sbyte> ToSByte = GenerateConvertTo<sbyte>();
-
     }
-
 }

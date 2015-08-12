@@ -5,6 +5,7 @@ using EnumUtilTests.Enums;
 using System.Linq;
 using System.Diagnostics;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace EnumUtilTests
 {
@@ -74,6 +75,9 @@ namespace EnumUtilTests
                 Assert.IsNotNull(da);
                 Assert.IsFalse(string.IsNullOrEmpty(da.Description));
             }
+
+            var vna = EnumUtil.GetValueNameAttributes<FlagsEnum>();
+            var vnd = EnumUtil.GetValueNameDescription<FlagsEnum>();
         }
 
         [TestMethod]
@@ -106,6 +110,16 @@ namespace EnumUtilTests
             string[] names = EnumUtilBase<T>.GetNames<T>();
             T[] values = EnumUtilBase<T>.GetValues<T>();
 
+            IReadOnlyDictionary<T, string> nameValues = 
+                EnumUtilBase<T>.GetValueName<T>();
+            Assert.IsNotNull(nameValues);
+
+            foreach (var nm in nameValues)
+            {
+                Assert.IsNotNull(nm.Value);
+            }
+
+            Assert.IsTrue(nameValues.Count == values.Length);
             Assert.IsTrue(Enum.GetValues(typeof(T)).Length == values.Length);
             Assert.IsTrue(names.Length == values.Length);
 

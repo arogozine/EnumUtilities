@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.ComponentModel;
 
 namespace EnumUtilities
 {
@@ -148,5 +145,121 @@ namespace EnumUtilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ToUInt64<T>(T val) where T : struct, E
             => EnumCompiledCache<T>.ToUInt64(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FieldInfo[] GetEnumFields<T>() where T : struct, E
+            => typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static);
+
+        public static IReadOnlyDictionary<T, DescriptionAttribute> GetValueDescription<T>()
+            where T : struct, E
+        {
+            return GetValueAttribute<T, DescriptionAttribute>();
+        }
+
+        public static IReadOnlyDictionary<T, NameAttribute<DescriptionAttribute>> GetValueNameDescription<T>()
+            where T : struct, E
+        {
+            return GetValueNameAttribute<T, DescriptionAttribute>();
+        }
+
+        public static IReadOnlyDictionary<T, Tuple<string, IEnumerable<Attribute>>> GetValueNameAttributes<T>()
+            where T : struct, E
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, Tuple<string, IEnumerable<Attribute>>>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = Tuple.Create(field.Name, field.GetCustomAttributes());
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<string, ValueAttribute<T, Y>> GetNameValueAttribute<T, Y>()
+            where T : struct, E
+            where Y : Attribute
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<string, ValueAttribute<T, Y>>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[field.Name] = new ValueAttribute<T, Y>((T)field.GetRawConstantValue(), field.GetCustomAttribute<Y>());
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<T, NameAttribute<Y>> GetValueNameAttribute<T, Y>()
+            where T : struct, E
+            where Y : Attribute
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, NameAttribute<Y>>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = new NameAttribute<Y>(field.Name, field.GetCustomAttribute<Y>());
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<T, Y> GetValueAttribute<T, Y>()
+            where T : struct, E
+            where Y : Attribute
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, Y>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = field.GetCustomAttribute<Y>();
+            }
+
+            return dict;
+
+        }
+
+        public static IReadOnlyDictionary<string, T> GetNameValue<T>()
+            where T : struct, E
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<string, T>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[field.Name] = (T)field.GetRawConstantValue();
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<T, string> GetValueName<T>()
+            where T : struct, E
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, string>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = field.Name;
+            }
+
+            return dict;
+        }
     }
 }

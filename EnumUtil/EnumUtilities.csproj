@@ -44,7 +44,9 @@
     <Compile Include="EnumCompiledCache.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="EnumUtilBase.cs" />
+    <Compile Include="NameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValueAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
