@@ -48,8 +48,12 @@ namespace EnumUtilTests
         }
 
         [TestMethod]
-        public void TestSpeed()
+        public void TestHasFlagGenericSpeed()
         {
+            // Test that the new generic implementation
+            // is fater than the default implementation
+            // of .HasFlag(...)
+
             int i;
             // warmup
             long gn = TestGeneric( out i);
@@ -58,8 +62,96 @@ namespace EnumUtilTests
             // test
             gn = TestGeneric(out i);
             nat = TestSpeedNatural(out i);
-
+            
             Assert.IsTrue(nat > gn);
+        }
+
+        [TestMethod]
+        public void TestNoAttributes()
+        {
+            var vn = EnumUtil.GetValueName<Int32Enum>();
+            var nv = EnumUtil.GetNameValue<Int32Enum>();
+            var vna = EnumUtil.GetValueNameAttributes<Int32Enum>();
+            var vnd = EnumUtil.GetValueNameDescription<Int32Enum>();
+
+            Assert.IsNotNull(vn);
+            Assert.IsNotNull(nv);
+
+            Assert.IsNotNull(vna);
+            Assert.IsNotNull(vnd);
+
+            Assert.IsTrue(vn.Count == vn.Count);
+            Assert.IsTrue(vn.Count == vna.Count);
+            Assert.IsTrue(vna.Count == vnd.Count);
+
+            foreach (var i in vn)
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Value));
+            }
+
+            foreach (var i in nv)
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Key));
+            }
+
+            foreach (var i in vna)
+            {
+                Assert.IsNotNull(i.Value);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Value.Item1));
+                Assert.IsNotNull(i.Value.Item2);
+                Assert.IsTrue(i.Value.Item2.Count() == 0);
+            }
+
+            foreach (var i in vnd)
+            {
+                Assert.IsNotNull(i.Value);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Value.Name));
+                Assert.IsNull(i.Value.Attribute);
+            }
+        }
+
+        [TestMethod]
+        public void TestAttributes2()
+        {
+            var vn = EnumUtil.GetValueName<FlagsEnum>();
+            var nv = EnumUtil.GetNameValue<FlagsEnum>();
+            var vna = EnumUtil.GetValueNameAttributes<FlagsEnum>();
+            var vnd = EnumUtil.GetValueNameDescription<FlagsEnum>();
+
+            Assert.IsNotNull(vn);
+            Assert.IsNotNull(nv);
+
+            Assert.IsNotNull(vna);
+            Assert.IsNotNull(vnd);
+
+            Assert.IsTrue(vn.Count == vn.Count);
+            Assert.IsTrue(vn.Count == vna.Count);
+            Assert.IsTrue(vna.Count == vnd.Count);
+
+            foreach (var i in vn)
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Value));
+            }
+
+            foreach (var i in nv)
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Key));
+            }
+
+            foreach (var i in vna)
+            {
+                Assert.IsNotNull(i.Value);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Value.Item1));
+                Assert.IsNotNull(i.Value.Item2);
+                Assert.IsTrue(i.Value.Item2.Count() == 1);
+            }
+
+            foreach (var i in vnd)
+            {
+                Assert.IsNotNull(i.Value);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(i.Value.Name));
+                Assert.IsNotNull(i.Value.Attribute);
+            }
         }
 
         [TestMethod]
@@ -75,9 +167,7 @@ namespace EnumUtilTests
                 Assert.IsNotNull(da);
                 Assert.IsFalse(string.IsNullOrEmpty(da.Description));
             }
-
-            var vna = EnumUtil.GetValueNameAttributes<FlagsEnum>();
-            var vnd = EnumUtil.GetValueNameDescription<FlagsEnum>();
+            
         }
 
         [TestMethod]

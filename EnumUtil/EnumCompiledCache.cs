@@ -3,12 +3,19 @@ using System.Linq.Expressions;
 
 namespace EnumUtilities
 {
+    /// <summary>
+    /// Uses Linq Expressions to compile Enum functions
+    /// 
+    /// (c) Alexandre Rogozine 2015
+    /// </summary>
+    /// <typeparam name="T">Enum Type</typeparam>
     internal static class EnumCompiledCache<T>
         where T : struct, IComparable, IFormattable, IConvertible
     {
         #region Generate Functions
 
-        private static Func<T, Y> GenerateConvertTo<Y>() where Y : struct
+        private static Func<T, Y> GenerateConvertTo<Y>() 
+            where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
         {
             var value = Expression.Parameter(typeof(T));
             UnaryExpression ue = Expression.Convert(value, typeof(Y));
