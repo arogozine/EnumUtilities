@@ -259,5 +259,23 @@ namespace EnumUtilTests
                 Assert.IsTrue(EnumUtilBase<T>.TryParse(name, true, out value));
             }
         }
+
+        [TestMethod]
+        public void SetFlag()
+        {
+            var value = default(FlagsEnum);
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil.SetFlag(value, FlagsEnum.Two));
+
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.Two, false));
+
+            value = FlagsEnum.One;
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.SetFlag(value, FlagsEnum.Two));
+
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.Two, false));
+        }
     }
 }
