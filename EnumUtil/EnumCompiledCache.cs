@@ -71,7 +71,7 @@ namespace EnumUtilities
                 .Compile();
         }
 
-        static Func<T, T> BitwiseUnaryOperator(ExpressionType expressionType)
+        private static Func<T, T> BitwiseUnaryOperator(ExpressionType expressionType)
         {
             var val = Expression.Parameter(typeof(T));
 
@@ -106,7 +106,7 @@ namespace EnumUtilities
             return BitwiseOperator(ExpressionType.ExclusiveOr);
         }
 
-        static Func<T, T> GenerateBitwiseNot()
+        private static Func<T, T> GenerateBitwiseNot()
             => BitwiseUnaryOperator(ExpressionType.Not);
 
         #endregion
