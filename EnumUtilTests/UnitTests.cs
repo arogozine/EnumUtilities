@@ -277,5 +277,24 @@ namespace EnumUtilTests
             Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.One, false));
             Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.Two, false));
         }
+
+        [TestMethod]
+        public void UnsetFlag()
+        {
+            // Removing flags from empty value is no-op.
+            var value = default(FlagsEnum);
+            Assert.AreEqual(value, EnumUtil.UnsetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(value, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+
+            // Starting with one flag.
+            value = FlagsEnum.One;
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.UnsetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+
+            // Starting with two flags.
+            value = FlagsEnum.One | FlagsEnum.Two;
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil.UnsetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+        }
     }
 }

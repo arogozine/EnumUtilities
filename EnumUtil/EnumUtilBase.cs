@@ -108,6 +108,9 @@ namespace EnumUtilities
         public static T SetFlag<T>(T value, T flag, bool on = true) where T : struct, E
             => on ? BitwiseOr(value, flag) : BitwiseAnd(value, BitwiseNot(flag));
 
+        public static T UnsetFlag<T>(T value, T flag) where T : struct, E
+            => SetFlag(value, flag, false);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string value, out T result) where T : struct, E
             => Enum.TryParse(value, out result);
