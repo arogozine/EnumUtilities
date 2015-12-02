@@ -32,6 +32,10 @@ namespace EnumUtilities
             => EnumCompiledCache<T>.BitwiseExclusiveOr(left, right);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T BitwiseNot<T>(T value) where T : struct, E
+            => EnumCompiledCache<T>.BitwiseNot(value);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasFlag<T>(T value, T flag) where T : struct, E
             => EnumCompiledCache<T>.HasFlag(value, flag);
 
@@ -100,6 +104,18 @@ namespace EnumUtilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string[] GetNames<T>() where T : struct, E
             => Enum.GetNames(typeof(T));
+
+        public static T SetFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseOr(value, flag);
+
+        public static T UnsetFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseAnd(value, BitwiseNot(flag));
+
+        public static T ToggleFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseExclusiveOr(value, flag);
+
+        public static T ToggleFlag<T>(T value, T flag, bool flagSet) where T : struct, E
+            => (flagSet ? (Func<T, T, T>)SetFlag : UnsetFlag)(value, flag);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string value, out T result) where T : struct, E
