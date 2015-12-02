@@ -105,11 +105,17 @@ namespace EnumUtilities
         public static string[] GetNames<T>() where T : struct, E
             => Enum.GetNames(typeof(T));
 
-        public static T SetFlag<T>(T value, T flag, bool on = true) where T : struct, E
-            => on ? BitwiseOr(value, flag) : BitwiseAnd(value, BitwiseNot(flag));
+        public static T SetFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseOr(value, flag);
 
         public static T UnsetFlag<T>(T value, T flag) where T : struct, E
-            => SetFlag(value, flag, false);
+            => BitwiseAnd(value, BitwiseNot(flag));
+
+        public static T ToggleFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseExclusiveOr(value, flag);
+
+        public static T ToggleFlag<T>(T value, T flag, bool flagSet) where T : struct, E
+            => (flagSet ? (Func<T, T, T>)SetFlag : UnsetFlag)(value, flag);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string value, out T result) where T : struct, E

@@ -267,15 +267,9 @@ namespace EnumUtilTests
             Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.One));
             Assert.AreEqual(FlagsEnum.Two, EnumUtil.SetFlag(value, FlagsEnum.Two));
 
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.One, false));
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.Two, false));
-
             value = FlagsEnum.One;
             Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.One));
             Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.SetFlag(value, FlagsEnum.Two));
-
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.SetFlag(value, FlagsEnum.One, false));
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.Two, false));
         }
 
         [TestMethod]
@@ -295,6 +289,32 @@ namespace EnumUtilTests
             value = FlagsEnum.One | FlagsEnum.Two;
             Assert.AreEqual(FlagsEnum.Two, EnumUtil.UnsetFlag(value, FlagsEnum.One));
             Assert.AreEqual(FlagsEnum.One, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+        }
+
+        [TestMethod]
+        public void ToggleFlag()
+        {
+            var value = default(FlagsEnum);
+            // Toggling will effectively set when unset.
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two));
+
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.One, true));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two, true));
+
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
+
+            value = FlagsEnum.One;
+            // Toggling will of course unset if already set.
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two));
+
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.One, true));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two, true));
+
+            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
         }
     }
 }
