@@ -315,6 +315,17 @@ namespace EnumUtilTests
 
             Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
             Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
+
+            // Starting with two flags.
+            value = FlagsEnum.One | FlagsEnum.Two;
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two));
+
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One, true));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two, true));
+
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
         }
     }
 }
