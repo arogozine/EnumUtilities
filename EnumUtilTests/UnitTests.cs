@@ -51,7 +51,7 @@ namespace EnumUtilTests
         public void TestHasFlagGenericSpeed()
         {
             // Test that the new generic implementation
-            // is fater than the default implementation
+            // is faster than the default implementation
             // of .HasFlag(...)
 
             int i;
