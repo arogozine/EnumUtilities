@@ -12,6 +12,7 @@ bool hasFlag = EnumUtil.HasFlag(YourEnum.Foo | YourEnum.Bar, YourEnum.Foo);
 YourEnum bitEnd = EnumUtil.BitwiseAnd(YourEnum.Foo, YourEnum.Bar);
 YourEnum bitXor = EnumUtil.BitwiseExclusiveOr(YourEnum.Foo, YourEnum.Bar);
 YourEnum bitOr = EnumUtil.BitwiseOr(YourEnum.Foo, YourEnum.Bar);
+YourEnum bitNot = EnumUtil.BitwiseNot(YourEnum.Foo);
 // Attributes on Enums
 var attributeOnEnum = EnumUtil.GetAttribute<DescriptionAttribute, YourEnum>();
 var attributeOnEnumValue = EnumUtil.GetAttribute<DescriptionAttribute, YourEnum>(YourEnum.Foo);
@@ -19,6 +20,12 @@ var attributesOnEnum = EnumUtil.GetAttributes<DescriptionAttribute, YourEnum>();
 var attributesOnEnumValue = EnumUtil.GetAttributes<DescriptionAttribute, YourEnum>(YourEnum.Foo);
 bool isFlags = EnumUtil.HasAttribute<FlagsAttribute, YourEnum>();
 bool isFlagsShortCut = EnumUtil.HasFlagsAttribute<YourEnum>();
+// Flags
+yourEnum = EnumUtil.SetFlag(yourEnum, YourEnum.Foo);
+yourEnum = EnumUtil.UnsetFlag(yourEnum, YourEnum.Foo);
+yourEnum = EnumUtil.ToggleFlag(yourEnum, YourEnum.Bar);
+bool toggle = SomeFunction();
+yourEnum = EnumUtil.ToggleFLag(yourEnum, YourEnum.Bar, toggle);
 // Values and Names
 string name = EnumUtil.GetName(YourEnum.Foo);
 string[] names = EnumUtil.GetNames<YourEnum>();
