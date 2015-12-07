@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.ComponentModel;
 
 namespace EnumUtilities
 {
@@ -33,6 +30,10 @@ namespace EnumUtilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T BitwiseExclusiveOr<T>(T left, T right) where T : struct, E
             => EnumCompiledCache<T>.BitwiseExclusiveOr(left, right);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T BitwiseNot<T>(T value) where T : struct, E
+            => EnumCompiledCache<T>.BitwiseNot(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasFlag<T>(T value, T flag) where T : struct, E
@@ -104,6 +105,18 @@ namespace EnumUtilities
         public static string[] GetNames<T>() where T : struct, E
             => Enum.GetNames(typeof(T));
 
+        public static T SetFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseOr(value, flag);
+
+        public static T UnsetFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseAnd(value, BitwiseNot(flag));
+
+        public static T ToggleFlag<T>(T value, T flag) where T : struct, E
+            => BitwiseExclusiveOr(value, flag);
+
+        public static T ToggleFlag<T>(T value, T flag, bool flagSet) where T : struct, E
+            => (flagSet ? (Func<T, T, T>)SetFlag : UnsetFlag)(value, flag);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string value, out T result) where T : struct, E
             => Enum.TryParse(value, out result);
@@ -116,5 +129,153 @@ namespace EnumUtilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetUnderlyingType<T>() where T : struct, E
             => Enum.GetUnderlyingType(typeof(T));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte ToByte<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToByte(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static sbyte ToSByte<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToSByte(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static short ToInt16<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToInt16(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ushort ToUInt16<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToUInt16(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ToInt32<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToInt32(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint ToUInt32<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToUInt32(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long ToInt64<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToInt64(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong ToUInt64<T>(T val) where T : struct, E
+            => EnumCompiledCache<T>.ToUInt64(val);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FieldInfo[] GetEnumFields<T>() where T : struct, E
+            => typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static);
+
+        public static IReadOnlyDictionary<T, DescriptionAttribute> GetValueDescription<T>()
+            where T : struct, E
+        {
+            return GetValueAttribute<T, DescriptionAttribute>();
+        }
+
+        public static IReadOnlyDictionary<T, NameAttribute<DescriptionAttribute>> GetValueNameDescription<T>()
+            where T : struct, E
+        {
+            return GetValueNameAttribute<T, DescriptionAttribute>();
+        }
+
+        public static IReadOnlyDictionary<T, Tuple<string, IEnumerable<Attribute>>> GetValueNameAttributes<T>()
+            where T : struct, E
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, Tuple<string, IEnumerable<Attribute>>>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = Tuple.Create(field.Name, field.GetCustomAttributes());
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<string, ValueAttribute<T, Y>> GetNameValueAttribute<T, Y>()
+            where T : struct, E
+            where Y : Attribute
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<string, ValueAttribute<T, Y>>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[field.Name] = new ValueAttribute<T, Y>((T)field.GetRawConstantValue(), field.GetCustomAttribute<Y>());
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<T, NameAttribute<Y>> GetValueNameAttribute<T, Y>()
+            where T : struct, E
+            where Y : Attribute
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, NameAttribute<Y>>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = new NameAttribute<Y>(field.Name, field.GetCustomAttribute<Y>());
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<T, Y> GetValueAttribute<T, Y>()
+            where T : struct, E
+            where Y : Attribute
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, Y>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = field.GetCustomAttribute<Y>();
+            }
+
+            return dict;
+
+        }
+
+        public static IReadOnlyDictionary<string, T> GetNameValue<T>()
+            where T : struct, E
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<string, T>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[field.Name] = (T)field.GetRawConstantValue();
+            }
+
+            return dict;
+        }
+
+        public static IReadOnlyDictionary<T, string> GetValueName<T>()
+            where T : struct, E
+        {
+            FieldInfo[] fields = GetEnumFields<T>();
+
+            var dict = new Dictionary<T, string>(fields.Length);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                dict[(T)field.GetRawConstantValue()] = field.Name;
+            }
+
+            return dict;
+        }
     }
 }

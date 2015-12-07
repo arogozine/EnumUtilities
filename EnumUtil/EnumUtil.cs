@@ -7,14 +7,6 @@ using System.Threading.Tasks;
 
 namespace EnumUtilities
 {
-    // EnumUtilBase must be public
-    // because a public class (EnumUtil) extends it
-    // but EnumUtilBase should not be used, 
-    // thus EnumUtilBase is marked Obsolete
-    // we disable this obsolete warning here
-    // because it only applies to the end user.
-    #pragma warning disable 618
-
     /// <summary>
     /// Enum Utilities.
     /// 
@@ -25,7 +17,4 @@ namespace EnumUtilities
     {
         private EnumUtil() { }
     }
-
-    #pragma warning restore 618
-
 }

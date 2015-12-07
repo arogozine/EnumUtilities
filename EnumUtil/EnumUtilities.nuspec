@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>EnumUtilities</id>
+    <version>1.0.0</version>
+    <title>Enum Utilities</title>
+    <authors>arogozine</authors>
+    <owners>arogozine</owners>
+    <licenseUrl>http://unlicense.org</licenseUrl>
+    <projectUrl>https://github.com/arogozine/EnumUtilities</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides generic enum functions such as bitwise operations, fast HasFlag, and others.</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Enum Generic Bitwise Flag</tags>
+  </metadata>
+</package>
