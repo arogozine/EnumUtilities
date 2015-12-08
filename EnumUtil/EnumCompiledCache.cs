@@ -111,30 +111,30 @@ namespace EnumUtilities
 
         #endregion
 
-        public static readonly Func<T, T, T> BitwiseOr = GenerateBitwiseOr();
+        internal static readonly Func<T, T, T> BitwiseOr = GenerateBitwiseOr();
 
-        public static readonly Func<T, T, T> BitwiseAnd = GenerateBitwiseAnd();
+        internal static readonly Func<T, T, T> BitwiseAnd = GenerateBitwiseAnd();
 
-        public static readonly Func<T, T, T> BitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
+        internal static readonly Func<T, T, T> BitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
 
-        public static readonly Func<T, T> BitwiseNot = GenerateBitwiseNot();
+        internal static readonly Func<T, T> BitwiseNot = GenerateBitwiseNot();
 
-        public static readonly Func<T, T, bool> HasFlag = GenerateHasFlag();
+        internal static readonly Func<T, T, bool> HasFlag = GenerateHasFlag();
 
-        public static readonly Func<T, ulong> ToUInt64 = GenerateConvertTo<ulong>();
+        internal static readonly Func<T, ulong> ToUInt64 = GenerateConvertTo<ulong>();
 
-        public static readonly Func<T, long> ToInt64 = GenerateConvertTo<long>();
+        internal static readonly Func<T, long> ToInt64 = GenerateConvertTo<long>();
 
-        public static readonly Func<T, uint> ToUInt32 = GenerateConvertTo<uint>();
+        internal static readonly Func<T, uint> ToUInt32 = GenerateConvertTo<uint>();
 
-        public static readonly Func<T, int> ToInt32 = GenerateConvertTo<int>();
+        internal static readonly Func<T, int> ToInt32 = GenerateConvertTo<int>();
 
-        public static readonly Func<T, ushort> ToUInt16 = GenerateConvertTo<ushort>();
+        internal static readonly Func<T, ushort> ToUInt16 = GenerateConvertTo<ushort>();
 
-        public static readonly Func<T, short> ToInt16 = GenerateConvertTo<short>();
+        internal static readonly Func<T, short> ToInt16 = GenerateConvertTo<short>();
 
-        public static readonly Func<T, byte> ToByte = GenerateConvertTo<byte>();
+        internal static readonly Func<T, byte> ToByte = GenerateConvertTo<byte>();
 
-        public static readonly Func<T, sbyte> ToSByte = GenerateConvertTo<sbyte>();
+        internal static readonly Func<T, sbyte> ToSByte = GenerateConvertTo<sbyte>();
     }
 }
