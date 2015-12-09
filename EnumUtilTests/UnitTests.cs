@@ -171,37 +171,38 @@ namespace EnumUtilTests
         }
 
         [TestMethod]
-        public void Int32Test() => RunTests<Int32Enum>();
+        public void Int32Test() => RunTests<Enum, Int32Enum>();
 
         [TestMethod]
-        public void UInt32Test() => RunTests<UInt32Enum>();
+        public void UInt32Test() => RunTests<Enum, UInt32Enum>();
 
         [TestMethod]
-        public void Int64Test() => RunTests<Int64Enum>();
+        public void Int64Test() => RunTests<Enum, Int64Enum>();
 
         [TestMethod]
-        public void UInt64Test() => RunTests<UInt64Enum>();
+        public void UInt64Test() => RunTests<Enum, UInt64Enum>();
 
         [TestMethod]
-        public void ByteTest() => RunTests<ByteEnum>();
+        public void ByteTest() => RunTests<Enum, ByteEnum>();
 
         [TestMethod]
-        public void Int16Test() => RunTests<Int16Enum>();
+        public void Int16Test() => RunTests<Enum, Int16Enum>();
 
         [TestMethod]
-        public void UInt16Test() => RunTests<UInt16Enum>();
+        public void UInt16Test() => RunTests<Enum, UInt16Enum>();
 
         [TestMethod]
-        public void SByteTest() => RunTests<SByteEnum>();
+        public void SByteTest() => RunTests<Enum, SByteEnum>();
 
-        private static void RunTests<T>()
-            where T : struct, IComparable, IFormattable, IConvertible
+        private static void RunTests<E, T>()
+            where E : class, IComparable, IFormattable, IConvertible
+            where T : struct, E
         {
-            string[] names = EnumUtilBase<T>.GetNames<T>();
-            T[] values = EnumUtilBase<T>.GetValues<T>();
+            string[] names = EnumUtilBase<E>.GetNames<T>();
+            T[] values = EnumUtilBase<E>.GetValues<T>();
 
             IReadOnlyDictionary<T, string> nameValues = 
-                EnumUtilBase<T>.GetValueName<T>();
+                EnumUtilBase<E>.GetValueName<T>();
             Assert.IsNotNull(nameValues);
 
             foreach (var nm in nameValues)
@@ -213,9 +214,9 @@ namespace EnumUtilTests
             Assert.IsTrue(Enum.GetValues(typeof(T)).Length == values.Length);
             Assert.IsTrue(names.Length == values.Length);
 
-            T aggregate = values.Aggregate((x, y) => EnumUtilBase<T>.BitwiseOr<T>(x, y));
+            T aggregate = values.Aggregate((x, y) => EnumUtilBase<E>.BitwiseOr<T>(x, y));
             Assert.IsTrue(Convert.ToInt32(aggregate) == 15);
-            T aggregate2 = values.Aggregate((x, y) => EnumUtilBase<T>.BitwiseAnd<T>(x, y));
+            T aggregate2 = values.Aggregate((x, y) => EnumUtilBase<E>.BitwiseAnd<T>(x, y));
             Assert.IsTrue(Convert.ToInt32(aggregate2) == 0);
 
             for (int i = 0; i < values.Length; i++)
@@ -223,40 +224,40 @@ namespace EnumUtilTests
                 T value = values[i];
                 string name = names[i];
 
-                byte byteVal = EnumUtilBase<T>.ToByte(value);
-                sbyte sbyteVal = EnumUtilBase<T>.ToSByte(value);
-                short int16Val = EnumUtilBase<T>.ToInt16(value);
-                ushort uint16Val = EnumUtilBase<T>.ToUInt16(value);
-                int intVal = EnumUtilBase<T>.ToInt32(value);
-                uint uintVal = EnumUtilBase<T>.ToUInt32(value);
-                long longVal = EnumUtilBase<T>.ToInt64(value);
-                ulong val = EnumUtilBase<T>.ToUInt64(value);
+                byte byteVal = EnumUtilBase<E>.ToByte(value);
+                sbyte sbyteVal = EnumUtilBase<E>.ToSByte(value);
+                short int16Val = EnumUtilBase<E>.ToInt16(value);
+                ushort uint16Val = EnumUtilBase<E>.ToUInt16(value);
+                int intVal = EnumUtilBase<E>.ToInt32(value);
+                uint uintVal = EnumUtilBase<E>.ToUInt32(value);
+                long longVal = EnumUtilBase<E>.ToInt64(value);
+                ulong val = EnumUtilBase<E>.ToUInt64(value);
 
-                Assert.IsTrue(EnumUtilBase<T>.BitwiseOr(value, value).Equals(value));
-                Assert.IsTrue(EnumUtilBase<T>.BitwiseAnd(value, value).Equals(value));
-                Assert.IsTrue(EnumUtilBase<T>.BitwiseExclusiveOr(value, value).Equals(default(T)));
+                Assert.IsTrue(EnumUtilBase<E>.BitwiseOr(value, value).Equals(value));
+                Assert.IsTrue(EnumUtilBase<E>.BitwiseAnd(value, value).Equals(value));
+                Assert.IsTrue(EnumUtilBase<E>.BitwiseExclusiveOr(value, value).Equals(default(T)));
 
-                Assert.IsTrue(EnumUtilBase<T>.HasFlag(aggregate, value));
-                Assert.IsFalse(EnumUtilBase<T>.HasFlag(value, aggregate));
-                Assert.IsTrue(EnumUtilBase<T>.HasFlag(aggregate, default(T)));
+                Assert.IsTrue(EnumUtilBase<E>.HasFlag(aggregate, value));
+                Assert.IsFalse(EnumUtilBase<E>.HasFlag(value, aggregate));
+                Assert.IsTrue(EnumUtilBase<E>.HasFlag(aggregate, default(T)));
 
-                Assert.IsFalse(EnumUtilBase<T>.HasFlagsAttribute<T>());
-                Assert.IsFalse(EnumUtilBase<T>.HasAttribute<FlagsAttribute, T>());
+                Assert.IsFalse(EnumUtilBase<E>.HasFlagsAttribute<T>());
+                Assert.IsFalse(EnumUtilBase<E>.HasAttribute<FlagsAttribute, T>());
 
-                Assert.AreEqual(name, EnumUtilBase<T>.GetName(value));
-                Assert.AreEqual(value, EnumUtilBase<T>.Parse<T>(name));
+                Assert.AreEqual(name, EnumUtilBase<E>.GetName(value));
+                Assert.AreEqual(value, EnumUtilBase<E>.Parse<T>(name));
 
-                Type t = EnumUtilBase<T>.GetUnderlyingType<T>();
+                Type t = EnumUtilBase<E>.GetUnderlyingType<T>();
                 Assert.AreEqual(t, Enum.GetUnderlyingType(typeof(T)));
 
-                Assert.IsTrue(EnumUtilBase<T>.TryParse(name, out value));
-                Assert.IsTrue(EnumUtilBase<T>.TryParse(name, false, out value));
-                Assert.IsFalse(EnumUtilBase<T>.TryParse(name.ToLower(), false, out value));
-                Assert.IsFalse(EnumUtilBase<T>.TryParse(name.ToUpper(), false, out value));
+                Assert.IsTrue(EnumUtilBase<E>.TryParse(name, out value));
+                Assert.IsTrue(EnumUtilBase<E>.TryParse(name, false, out value));
+                Assert.IsFalse(EnumUtilBase<E>.TryParse(name.ToLower(), false, out value));
+                Assert.IsFalse(EnumUtilBase<E>.TryParse(name.ToUpper(), false, out value));
 
-                Assert.IsTrue(EnumUtilBase<T>.TryParse(name.ToLower(), true, out value));
-                Assert.IsTrue(EnumUtilBase<T>.TryParse(name.ToUpper(), true, out value));
-                Assert.IsTrue(EnumUtilBase<T>.TryParse(name, true, out value));
+                Assert.IsTrue(EnumUtilBase<E>.TryParse(name.ToLower(), true, out value));
+                Assert.IsTrue(EnumUtilBase<E>.TryParse(name.ToUpper(), true, out value));
+                Assert.IsTrue(EnumUtilBase<E>.TryParse(name, true, out value));
             }
         }
 
