@@ -43,3 +43,10 @@ If that is the case, please use the EnumUtilBase class instead,
 EnumUtilBase<YourEnum>.GetValues<YourEnum>();
 ```
 Do note that EnumUtilBase is not type safe itself and will throw a runtime exception if a non-enum type is passed in as a generic argument.
+
+
+### Installation
+
+To use in your project, install the
+[`EnumUtilities`](https://www.nuget.org/packages/EnumUtilities)
+package.
