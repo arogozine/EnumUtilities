@@ -7,12 +7,10 @@ using System.Runtime.CompilerServices;
 namespace EnumUtilities
 {
     /// <summary>
-    /// Provides all the functions of EnumUtil without Enum only type safety.
-    /// 
-    /// Do not use this class directly if possible.
-    /// Go through EnumUtil class instead for true type safety.
+    /// <para>Provides all the functions of EnumUtil without Enum only type safety.</para>
+    /// <para>Do not use this class directly if possible; Go through <c>EnumUtil</c> instead.</para>
     /// </summary>
-    /// <typeparam name="E">If possible, Enum abstract class otherwise a specific enumeration type.</typeparam>
+    /// <typeparam name="E">Enum abstract class otherwise a specific enumeration type.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class EnumUtilBase<E>
         where E :/*Class,*/ IComparable, IFormattable, IConvertible
@@ -25,7 +23,7 @@ namespace EnumUtilities
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="left">An enumeration value</param>
         /// <param name="right">An enumeration value</param>
-        /// <returns>left | right</returns>
+        /// <returns><c>left | right</c></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T BitwiseOr<T>(T left, T right) where T : struct, E
             => EnumCompiledCache<T>.BitwiseOr(left, right);
@@ -36,7 +34,7 @@ namespace EnumUtilities
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="left">An enumeration value</param>
         /// <param name="right">An enumeration value</param>
-        /// <returns>left &amp; right</returns>
+        /// <returns><c>left &amp; right</c></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T BitwiseAnd<T>(T left, T right) where T : struct, E
             => EnumCompiledCache<T>.BitwiseAnd(left, right);
@@ -47,7 +45,7 @@ namespace EnumUtilities
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="left">An enumeration value</param>
         /// <param name="right">An enumeration value</param>
-        /// <returns>left ^ right</returns>
+        /// <returns><c>left ^ right</c></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T BitwiseExclusiveOr<T>(T left, T right) where T : struct, E
             => EnumCompiledCache<T>.BitwiseExclusiveOr(left, right);
@@ -57,14 +55,14 @@ namespace EnumUtilities
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
-        /// <returns>~value</returns>
+        /// <returns><c>~value</c></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T BitwiseNot<T>(T value) where T : struct, E
             => EnumCompiledCache<T>.BitwiseNot(value);
 
         /// <summary>
         /// Checks whether a flag exists.
-        /// This function does not check for FlagsAttribute.
+        /// This function does not check for <c>FlagsAttribute</c>.
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
@@ -77,7 +75,7 @@ namespace EnumUtilities
             => EnumCompiledCache<T>.HasFlag(value, flag);
 
         /// <summary>
-        /// Retrieves a specific attribute on the Enum
+        /// Retrieves a specific attribute on the enumeration type
         /// </summary>
         /// <typeparam name="Y">Attribute to Retrieve</typeparam>
         /// <typeparam name="T">An enumeration type</typeparam>
@@ -105,7 +103,7 @@ namespace EnumUtilities
         }
 
         /// <summary>
-        /// Retrivies a specific attribute on an enum value
+        /// Retrieves a specific attribute on an enum value
         /// </summary>
         /// <typeparam name="Y">Attribute Type</typeparam>
         /// <typeparam name="T">An enumeration type</typeparam>
@@ -123,7 +121,7 @@ namespace EnumUtilities
         }
 
         /// <summary>
-        /// Retrivies specific attributes on an enum value
+        /// Retrieves specific attributes on an enum value
         /// </summary>
         /// <typeparam name="Y">Attribute Type</typeparam>
         /// <typeparam name="T">An enumeration type</typeparam>
@@ -164,8 +162,8 @@ namespace EnumUtilities
             => typeof(T).IsDefined(typeof(FlagsAttribute), false);
 
         /// <summary>
-        /// Returns the Name of a certain Enum Value
-        /// <seealso cref="Enum.GetName(Type, object)"/>
+        /// Returns the Name of a certain Enum Value.
+        /// Wrapper for <seealso cref="Enum.GetName(Type, object)"/>
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
@@ -176,7 +174,7 @@ namespace EnumUtilities
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
-        /// <seealso cref="Enum.Parse(Type, string)"/>
+        /// Wrapper for <seealso cref="Enum.Parse(Type, string)"/>
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">A string containing the name or value to convert.</param>
@@ -187,7 +185,7 @@ namespace EnumUtilities
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter specifies whether the operation is case-insensitive.
-        /// <seealso cref="Enum.Parse(Type, string, bool)"/>
+        /// Wrapper for <seealso cref="Enum.Parse(Type, string, bool)"/>
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">A string containing the name or value to convert.</param>
@@ -199,7 +197,7 @@ namespace EnumUtilities
 
         /// <summary>
         /// Retrieves an array of the values of the constants in a specified enumeration.        
-        /// <seealso cref="Enum.GetValues(Type)"/>
+        /// Wrapper for <seealso cref="Enum.GetValues(Type)"/>
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>An array that contains the values of the constants in T.</returns>
@@ -209,7 +207,7 @@ namespace EnumUtilities
 
         /// <summary>
         /// Retrieves an array of the names of the constants in a specified enumeration.        
-        /// <seealso cref="Enum.GetNames(Type)"/>
+        /// Wrapper for <seealso cref="Enum.GetNames(Type)"/>
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>A string array of the names of the constants in T.</returns>
@@ -238,7 +236,7 @@ namespace EnumUtilities
             => BitwiseAnd(value, BitwiseNot(flag));
 
         /// <summary>
-        /// Returns the result of bitwise exclusive or for value and the flag.
+        /// Returns the result of bitwise exclusive or for the value and the flag.
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
@@ -259,13 +257,14 @@ namespace EnumUtilities
             => (flagSet ? (Func<T, T, T>)SetFlag : UnsetFlag)(value, flag);
 
         /// <summary>
-        /// <seealso cref="Enum.TryParse{TEnum}(string, out TEnum)"/>
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+        /// Wrapper for <seealso cref="Enum.TryParse{TEnum}(string, out TEnum)"/>
         /// </summary>
         /// <typeparam name="T">The enumeration type to which to convert value.</typeparam>
         /// <param name="value">
         /// The string representation of the enumeration name or underlying value to convert.
         /// </param>
-        /// <param name="result"></param>
+        /// <param name="result">Contains an object of type <c>T</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
         /// <returns>
         /// true if the value parameter was converted successfully; otherwise, false.
         /// </returns>
@@ -282,7 +281,7 @@ namespace EnumUtilities
         /// <typeparam name="T">The enumeration type to which to convert value.</typeparam>
         /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
         /// <param name="ignoreCase">true to ignore case; false to consider case.</param>
-        /// <param name="result"></param>
+        /// <param name="result">Contains an object of type <c>T</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string value, bool ignoreCase, out T result)
@@ -291,7 +290,7 @@ namespace EnumUtilities
 
         /// <summary>
         /// Returns the underlying type of the specified enumeration.        
-        /// <seealso cref="Enum.GetUnderlyingType(Type)"/>
+        /// Wrapper for <seealso cref="Enum.GetUnderlyingType(Type)"/>
         /// </summary>
         /// <typeparam name="T">The enumeration whose underlying type will be retrieved.</typeparam>
         /// <returns>The underlying type of T.</returns>
@@ -437,7 +436,7 @@ namespace EnumUtilities
         /// Generates a Dictionary of Enum Value to Enum Value and Attribute
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
-        /// <typeparam name="Y">Attribute Type</typeparam>
+        /// <typeparam name="Y">The type of attribute</typeparam>
         /// <returns>Map of name to value and attribute</returns>
         public static IReadOnlyDictionary<string, ValueAttribute<T, Y>> GetNameValueAttribute<T, Y>()
             where T : struct, E
@@ -460,7 +459,7 @@ namespace EnumUtilities
         /// Generates a Dictionary of Enum Value to Name and Attribute
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
-        /// <typeparam name="Y">Attribute Type</typeparam>
+        /// <typeparam name="Y">The type of attribute</typeparam>
         /// <returns>Map of value to name and attribute</returns>
         public static IReadOnlyDictionary<T, NameAttribute<Y>> GetValueNameAttribute<T, Y>()
             where T : struct, E
@@ -483,7 +482,7 @@ namespace EnumUtilities
         /// Generates a Dictionary of Enum Value to Attribute Y
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
-        /// <typeparam name="Y">An attribute type</typeparam>
+        /// <typeparam name="Y">The type of attribute</typeparam>
         /// <returns>Map of value to attribute</returns>
         public static IReadOnlyDictionary<T, Y> GetValueAttribute<T, Y>()
             where T : struct, E
@@ -500,7 +499,6 @@ namespace EnumUtilities
             }
 
             return dict;
-
         }
 
         /// <summary>
