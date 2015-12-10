@@ -11,9 +11,9 @@ namespace EnumUtilities
     /// <para>Do not use this class directly if possible; Go through <c>EnumUtil</c> instead.</para>
     /// </summary>
     /// <typeparam name="E">Enum abstract class otherwise a specific enumeration type.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public abstract class EnumUtilBase<E>
-        where E :/*Class,*/ IComparable, IFormattable, IConvertible
+        where E : class, IComparable, IFormattable, IConvertible
     {
         internal EnumUtilBase() { }
 
