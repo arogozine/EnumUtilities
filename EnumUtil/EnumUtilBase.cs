@@ -7,15 +7,26 @@ using System.Runtime.CompilerServices;
 namespace EnumUtilities
 {
     /// <summary>
-    /// <para>Provides all the functions of EnumUtil without Enum only type safety.</para>
+    /// <para>Provides all the functions of EnumUtil, but requires two constrains - first must be System.Enum and second a specific enumeration type</para>
     /// <para>Do not use this class directly if possible; Go through <c>EnumUtil</c> instead.</para>
     /// </summary>
-    /// <typeparam name="E">Enum abstract class otherwise a specific enumeration type.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
-    public abstract class EnumUtilBase<E>
+    /// <typeparam name="E">System.Enum</typeparam>
+    public abstract class EnumUtilBase<E> : EnumUtilUnsafe<E>
         where E : class, IComparable, IFormattable, IConvertible
     {
-        internal EnumUtilBase() { }
+
+    }
+
+    /// <summary>
+    /// Unsafe Version.
+    /// Use only when necessary.
+    /// </summary>
+    /// <typeparam name="E">System.Enum</typeparam>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public abstract class EnumUtilUnsafe<E>
+        where E : IComparable, IFormattable, IConvertible
+    {
+        internal EnumUtilUnsafe() { }
 
         /// <summary>
         /// Bitwise OR
