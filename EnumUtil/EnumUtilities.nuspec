@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>EnumUtilities</id>
-    <version>2.3.0</version>
+    <version>3.0.0</version>
     <title>Enum Utilities</title>
     <authors>arogozine</authors>
     <owners>arogozine</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/arogozine/EnumUtilities</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides generic enum functions such as bitwise operations, fast HasFlag, and others.</description>
-    <releaseNotes>Better constraints and documentation</releaseNotes>
+    <releaseNotes>Added EnumUtilUnsafe as a base class</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Enum Generic Bitwise Flag</tags>
   </metadata>
