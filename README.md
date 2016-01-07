@@ -73,6 +73,25 @@ public static void OtherFunction()
 	YourFunction<Enum, YourEnum>();
 }
 ```
+
+Note: When consuming the library from F\# this is not necessary. You will be able to write generic functions using `EnumUtil` in F\#,
+
+```fsharp
+[<Flags>]
+type FSFlagsEnum =
+    | One = 1
+    | Two = 2
+    | Fourt = 4
+    | Eight = 8
+
+let isFlagsEnum<'enum when 'enum : (new : unit -> 'enum) and 'enum : struct and 'enum :> Enum>() = 
+    EnumUtil.HasFlagsAttribute<'enum>()
+
+let bitWiseOr a b = EnumUtil.BitwiseOr(a, b)
+
+let three = bitWiseOr FSFlagsEnum.One FSFlagsEnum.Two
+```
+
 ### FAQ
 
 #### 1. How does the library work?
@@ -95,7 +114,7 @@ Others use Expressions (see below) or simple reflection.
 
 **Bitwise Operations**
 
-In .NET languages `ClassName<int>` and `ClassName<double>` are separate classes that do not share static state.
+In .NET languages `ClassName<int>` and `ClassName<double>` do not share static state.
 Enum Utilities uses this fact to generate and compile bitwise expressions in the static initializer.
 An expression is created that casts down your enumeration to its underLying type (usually `Int32`).
 So the bitwise operation happen on the underlying type. The compiled expression is then stored in a
