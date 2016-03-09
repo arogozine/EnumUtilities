@@ -244,6 +244,9 @@ namespace EnumUtilTests
                 Assert.IsFalse(EnumUtilBase<E>.HasFlagsAttribute<T>());
                 Assert.IsFalse(EnumUtilBase<E>.HasAttribute<FlagsAttribute, T>());
 
+                Assert.IsTrue(EnumUtilBase<E>.IsDefined(value));
+                Assert.IsFalse(EnumUtilBase<E>.IsDefined(default(T)));
+
                 Assert.AreEqual(name, EnumUtilBase<E>.GetName(value));
                 Assert.AreEqual(value, EnumUtilBase<E>.Parse<T>(name));
 
