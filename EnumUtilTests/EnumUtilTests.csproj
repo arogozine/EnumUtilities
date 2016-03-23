@@ -61,6 +61,7 @@
     <Compile Include="Enums\UInt16Enum.cs" />
     <Compile Include="Enums\UInt32Enum.cs" />
     <Compile Include="Enums\UInt64Enum.cs" />
+    <Compile Include="NotEnum.cs" />
     <Compile Include="UnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

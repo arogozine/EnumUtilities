@@ -331,5 +331,19 @@ namespace EnumUtilTests
             Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
             Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Type provided must be an Enum.")]
+        public void UnsafeImproperGetValues()
+        {
+            NotEnum[] meg = EnumUtilUnsafe<NotEnum>.GetValues<NotEnum>();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TypeInitializationException), "Type provided must be an Enum.")]
+        public void UnsafeImproperOr()
+        {
+            NotEnum or = EnumUtilUnsafe<NotEnum>.BitwiseOr(new NotEnum(), new NotEnum());
+        }
     }
 }
