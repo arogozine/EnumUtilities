@@ -86,6 +86,22 @@ namespace EnumUtilities
             => EnumCompiledCache<T>.HasFlag(value, flag);
 
         /// <summary>
+        /// Checks if the value is valid for the enum.
+        /// </summary>
+        /// <typeparam name="T">An enumeration type</typeparam>
+        /// <param name="value">An enumeration value</param>
+        /// <returns>
+        /// true if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+        /// </returns>
+        /// <remarks>
+        ///   <para>
+        ///     For the sake of providing a typesafe API alternative to <c>Enum.IsDefined(typeof(T), value)</c>.
+        ///   </para>
+        /// </remarks>
+        public static bool IsDefined<T>(T value) where T : struct, E
+            => Enum.IsDefined(typeof(T), value);
+
+        /// <summary>
         /// Retrieves a specific attribute on the enumeration type
         /// </summary>
         /// <typeparam name="Y">Attribute to Retrieve</typeparam>
