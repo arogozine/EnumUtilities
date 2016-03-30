@@ -260,7 +260,7 @@ namespace EnumUtilities
         /// <param name="flag">An enumeration value</param>
         /// <returns>Value with the specified flag unset</returns>
         public static T UnsetFlag<T>(T value, T flag) where T : struct, E
-            => BitwiseAnd(value, BitwiseNot(flag));
+            => EnumCompiledCache<T>.UnsetFlag(value, flag);
 
         /// <summary>
         /// Returns the result of bitwise exclusive or for the value and the flag.

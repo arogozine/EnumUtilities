@@ -91,6 +91,36 @@ namespace EnumUtilities
                 .Compile();
         }
 
+        private static Func<T, T, T> GenerateUnsetFlag()
+        {
+            var val = Expression.Parameter(typeof(T));
+            var flag = Expression.Parameter(typeof(T));
+
+            // Convert from Enum to Enum’s underlying type (byte, int, long, …)
+            // to allow bitwise functions to work
+            var underlyingType = Enum.GetUnderlyingType(typeof(T));
+            var valConverted = Expression.Convert(val, underlyingType);
+            var flagConverted = Expression.Convert(flag, underlyingType);
+
+            // ~flag
+            var notFlagExpression =
+                Expression.MakeUnary(
+                    ExpressionType.Not,
+                    flagConverted,
+                    null);
+
+            // val & (~flag)
+            var andExpression = Expression.MakeBinary(
+                ExpressionType.And,
+                valConverted,
+                notFlagExpression);
+
+            // Convert back to Enum
+            UnaryExpression backToEnumType = Expression.Convert(andExpression, typeof(T));
+            return Expression.Lambda<Func<T, T, T>>(backToEnumType, val, flag)
+                .Compile();
+        }
+
         private static Func<T, T, T> GenerateBitwiseOr()
         {
             return BitwiseOperator(ExpressionType.Or);
@@ -110,6 +140,8 @@ namespace EnumUtilities
             => BitwiseUnaryOperator(ExpressionType.Not);
 
         #endregion
+
+        internal static readonly Func<T, T, T> UnsetFlag = GenerateUnsetFlag();
 
         internal static readonly Func<T, T, T> BitwiseOr = GenerateBitwiseOr();
 
