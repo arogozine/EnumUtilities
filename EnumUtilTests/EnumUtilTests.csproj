@@ -53,6 +53,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Enums\ByteEnum.cs" />
+    <Compile Include="Enums\EmptyEnum.cs" />
     <Compile Include="Enums\FlagsEnum.cs" />
     <Compile Include="Enums\Int32Enum.cs" />
     <Compile Include="Enums\Int64Enum.cs" />

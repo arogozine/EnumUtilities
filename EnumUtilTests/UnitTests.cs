@@ -333,6 +333,52 @@ namespace EnumUtilTests
         }
 
         [TestMethod]
+        public void HasFlag()
+        {
+            foreach(FlagsEnum flag in EnumUtil.GetValues<FlagsEnum>())
+            {
+                Assert.IsTrue(EnumUtil.HasFlag(flag, flag));
+                Assert.IsFalse(EnumUtil.HasFlag(default(FlagsEnum), flag));
+            }
+        }
+
+        [TestMethod]
+        public void HasFlagDefault()
+        {
+            bool resultEnumUtil = EnumUtil.HasFlag(default(FlagsEnum), default(FlagsEnum));
+            bool resultOfficial = default(FlagsEnum).HasFlag(default(FlagsEnum));
+            Assert.AreEqual(resultEnumUtil, resultOfficial);
+        }
+
+        [TestMethod]
+        public void TestEmptyEnum()
+        {
+            var values = EnumUtil.GetValues<EmptyEnum>();
+            Assert.IsTrue(values.Length == 0);
+
+            var valueDesc = EnumUtil.GetValueDescription<EmptyEnum>();
+            Assert.IsTrue(valueDesc.Count == 0);
+
+            var valueNameDesc = EnumUtil.GetValueNameDescription<EmptyEnum>();
+            Assert.IsTrue(valueNameDesc.Count == 0);
+
+            var nameValue = EnumUtil.GetNameValue<EmptyEnum>();
+            Assert.IsTrue(nameValue.Count == 0);
+
+            var names = EnumUtil.GetNames<EmptyEnum>();
+            Assert.IsTrue(names.Length == 0);
+
+            var fields = EnumUtil.GetEnumFields<EmptyEnum>();
+            Assert.IsTrue(fields.Length == 0);
+
+            var attributes = EnumUtil.GetAttributes<DescriptionAttribute, EmptyEnum>();
+            Assert.IsTrue(attributes.Count() == 0);
+
+            var valueAttribute = EnumUtil.GetValueAttribute<EmptyEnum, DescriptionAttribute>();
+            Assert.IsTrue(valueAttribute.Count == 0);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Type provided must be an Enum.")]
         public void UnsafeImproperGetValues()
         {
