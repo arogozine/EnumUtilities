@@ -168,5 +168,9 @@ namespace EnumUtilities
         internal static readonly Func<T, byte> ToByte = GenerateConvertTo<byte>();
 
         internal static readonly Func<T, sbyte> ToSByte = GenerateConvertTo<sbyte>();
+
+        internal static readonly Func<T, float> ToSingle = GenerateConvertTo<float>();
+
+        internal static readonly Func<T, double> ToDouble = GenerateConvertTo<double>();
     }
 }

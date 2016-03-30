@@ -232,6 +232,8 @@ namespace EnumUtilTests
                 uint uintVal = EnumUtilBase<E>.ToUInt32(value);
                 long longVal = EnumUtilBase<E>.ToInt64(value);
                 ulong val = EnumUtilBase<E>.ToUInt64(value);
+                float floatVal = EnumUtilBase<E>.ToSingle(value);
+                double doubleVal = EnumUtilBase<E>.ToDouble(value);
 
                 Assert.IsTrue(EnumUtilBase<E>.BitwiseOr(value, value).Equals(value));
                 Assert.IsTrue(EnumUtilBase<E>.BitwiseAnd(value, value).Equals(value));

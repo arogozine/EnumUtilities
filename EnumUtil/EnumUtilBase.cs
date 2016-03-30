@@ -406,6 +406,24 @@ namespace EnumUtilities
             => EnumCompiledCache<T>.ToUInt64(value);
 
         /// <summary>
+        /// Converts the value of the specified enumeration to a float.
+        /// </summary>
+        /// <typeparam name="T">An enumeration type</typeparam>
+        /// <param name="value">An enumeration value</param>
+        /// <returns>A single precision floating point number that is case equivalent to the enumeration value</returns>
+        public static float ToSingle<T>(T value) where T : struct, E
+            => EnumCompiledCache<T>.ToSingle(value);
+
+        /// <summary>
+        /// Converts the value of the specified enumeration to a double.
+        /// </summary>
+        /// <typeparam name="T">An enumeration type</typeparam>
+        /// <param name="value">An enumeration value</param>
+        /// <returns>A double precision floating point number that is case equivalent to the enumeration value</returns>
+        public static double ToDouble<T>(T value) where T : struct, E
+            => EnumCompiledCache<T>.ToDouble(value);
+
+        /// <summary>
         /// Returns FieldInfo array for the enumeration.
         /// </summary>
         /// <typeparam name="T">An enumeration type</typeparam>
