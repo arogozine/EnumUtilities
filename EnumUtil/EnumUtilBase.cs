@@ -102,6 +102,18 @@ namespace EnumUtilities
             => Enum.IsDefined(typeof(T), value);
 
         /// <summary>
+        /// Returns an indication whether a constant with a specified name exists in a specified
+        /// enumeration.
+        /// </summary>
+        /// <typeparam name="T">An enumeration type</typeparam>
+        /// <param name="value">An enumeration value</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+        /// </returns>
+        public static bool IsDefined<T>(string name) where T : struct, E
+            => Enum.IsDefined(typeof(T), name);
+
+        /// <summary>
         /// Retrieves a specific attribute on the enumeration type
         /// </summary>
         /// <typeparam name="Y">Attribute to Retrieve</typeparam>

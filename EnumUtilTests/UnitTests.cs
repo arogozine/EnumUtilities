@@ -279,6 +279,23 @@ namespace EnumUtilTests
         }
 
         [TestMethod]
+        public void IsDefinedString()
+        {
+            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.One)));
+            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Two)));
+            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Four)));
+            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Eight)));
+            Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(string.Empty));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void IsDefinedNullString()
+        {
+            Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(null));
+        }
+
+        [TestMethod]
         public void UnsetFlag()
         {
             // Removing flags from empty value is no-op.
