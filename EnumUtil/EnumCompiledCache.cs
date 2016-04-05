@@ -32,16 +32,17 @@ namespace EnumUtilities
             return Expression.Lambda<Func<Y, T>>(ue, value)
                 .Compile();
         }
-        public static Func<Y, bool> GenerateIsDefined<Y>()
+
+        private static Func<Y, bool> GenerateIsDefined<Y>()
             where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
         {
             var value = Expression.Parameter(typeof(Y), "value");
             var convVal = Expression.Convert(value, typeof(T));
 
-            Expression<Func<T, bool>> e =
-                x => Array.IndexOf(ReflectionCache<T>.FieldValues, x) >= 0;
+            Expression<Func<T, bool>> lookup =
+                val => Array.IndexOf(ReflectionCache<T>.FieldValues, val) >= 0;
 
-            return Expression.Lambda<Func<Y, bool>>(Expression.Invoke(e, convVal), value)
+            return Expression.Lambda<Func<Y, bool>>(Expression.Invoke(lookup, convVal), value)
                 .Compile();
         }
 

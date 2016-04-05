@@ -233,7 +233,7 @@ namespace EnumUtilities
         ///   </para>
         /// </remarks>
         public static bool IsDefined<T>(T value) where T : struct, E
-            => Enum.IsDefined(typeof(T), value);
+            => Array.IndexOf(ReflectionCache<T>.FieldValues, value) >= 0;
 
         /// <summary>
         /// Returns an indication whether a constant with a specified name exists in a specified

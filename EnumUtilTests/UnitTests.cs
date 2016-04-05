@@ -22,10 +22,11 @@ namespace EnumUtilTests
             for (; i < 2000000; i++)
             {
                 byte two = 2;
-                isDefined = Enum.IsDefined(typeof(Int32Enum), (int)two);
+                isDefined &= Enum.IsDefined(typeof(Int32Enum), (int)two);
             }
 
             watch.Stop();
+            Assert.IsTrue(isDefined);
             return watch.ElapsedMilliseconds;
         }
 
@@ -44,11 +45,12 @@ namespace EnumUtilTests
             }
 
             watch.Stop();
+            Assert.IsTrue(isDefined);
             return watch.ElapsedMilliseconds;
         }
 
         [TestMethod]
-        public void TestPerf()
+        public void IsDefinedNumericPerformance()
         {
             int i;
             // warmup
@@ -62,6 +64,54 @@ namespace EnumUtilTests
             Assert.IsTrue(std > gen);
         }
 
+        [TestMethod]
+        public void TestIsDefinedEnumPerformance()
+        {
+            int i;
+            // warmup
+            long gen = IsDefinedGenericEnum(out i);
+            long std = IsDefinedStandardEnum(out i);
+
+            // test
+            gen = IsDefinedGenericEnum(out i);
+            std = IsDefinedStandardEnum(out i);
+
+            Assert.IsTrue(std > gen);
+        }
+
+        public static long IsDefinedStandardEnum(out int i)
+        {
+            var watch = Stopwatch.StartNew();
+
+            bool isDefined = true;
+
+            i = 0;
+            for (; i < 2000000; i++)
+            {
+                isDefined &= Enum.IsDefined(typeof(Int32Enum), Int32Enum.Two);
+            }
+
+            watch.Stop();
+            Assert.IsTrue(isDefined);
+            return watch.ElapsedMilliseconds;
+        }
+
+        public static long IsDefinedGenericEnum(out int i)
+        {
+            var watch = Stopwatch.StartNew();
+
+            bool isDefined = true;
+
+            i = 0;
+            for (; i < 2000000; i++)
+            {
+                isDefined &= EnumUtil.IsDefined(Int32Enum.Two);
+            }
+
+            watch.Stop();
+            Assert.IsTrue(isDefined);
+            return watch.ElapsedMilliseconds;
+        }
 
 
         public static long TestGeneric(out int i) {
