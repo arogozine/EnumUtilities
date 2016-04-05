@@ -12,6 +12,58 @@ namespace EnumUtilTests
     [TestClass]
     public class UnitTests
     {
+        public static long IsDefinedStandard(out int i)
+        {
+            var watch = Stopwatch.StartNew();
+
+            bool isDefined = true;
+
+            i = 0;
+            for (; i < 2000000; i++)
+            {
+                byte two = 2;
+                isDefined = Enum.IsDefined(typeof(Int32Enum), (int)two);
+            }
+
+            watch.Stop();
+            return watch.ElapsedMilliseconds;
+        }
+
+        public static long IsDefinedGeneric(out int i)
+        {
+            var watch = Stopwatch.StartNew();
+
+            bool isDefined = true;
+
+            var isDefinedFunc = 
+
+            i = 0;
+            for (; i < 2000000; i++)
+            {
+                isDefined &= EnumUtil.IsDefined<Int32Enum>((byte)2);
+            }
+
+            watch.Stop();
+            return watch.ElapsedMilliseconds;
+        }
+
+        [TestMethod]
+        public void TestPerf()
+        {
+            int i;
+            // warmup
+            long gen = IsDefinedGeneric(out i);
+            long std = IsDefinedStandard(out i);
+
+            // test
+            gen = IsDefinedGeneric(out i);
+            std = IsDefinedStandard(out i);
+
+            Assert.IsTrue(std > gen);
+        }
+
+
+
         public static long TestGeneric(out int i) {
             var watch = Stopwatch.StartNew();
 
@@ -225,15 +277,34 @@ namespace EnumUtilTests
                 string name = names[i];
 
                 byte byteVal = EnumUtilBase<E>.ToByte(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromByte<T>(byteVal), value);
+
                 sbyte sbyteVal = EnumUtilBase<E>.ToSByte(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromSByte<T>(sbyteVal), value);
+
                 short int16Val = EnumUtilBase<E>.ToInt16(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromInt16<T>(int16Val), value);
+
                 ushort uint16Val = EnumUtilBase<E>.ToUInt16(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromUInt16<T>(uint16Val), value);
+
                 int intVal = EnumUtilBase<E>.ToInt32(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromInt32<T>(intVal), value);
+
                 uint uintVal = EnumUtilBase<E>.ToUInt32(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromUInt32<T>(uintVal), value);
+
                 long longVal = EnumUtilBase<E>.ToInt64(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromInt64<T>(longVal), value);
+
                 ulong val = EnumUtilBase<E>.ToUInt64(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromUInt64<T>(val), value);
+
                 float floatVal = EnumUtilBase<E>.ToSingle(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromSingle<T>(floatVal), value);
+
                 double doubleVal = EnumUtilBase<E>.ToDouble(value);
+                Assert.AreEqual(EnumUtilBase<E>.FromDouble<T>(doubleVal), value);
 
                 Assert.IsTrue(EnumUtilBase<E>.BitwiseOr(value, value).Equals(value));
                 Assert.IsTrue(EnumUtilBase<E>.BitwiseAnd(value, value).Equals(value));
@@ -286,6 +357,49 @@ namespace EnumUtilTests
             Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Four)));
             Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Eight)));
             Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(string.Empty));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void IsDefinedStringNull()
+        {
+            Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(null));
+        }
+
+        [TestMethod]
+        public void IsDefinedUnderlyingType() {
+            
+            IsDefined<Enum, SByteEnum>();
+            IsDefined<Enum, ByteEnum>();
+            IsDefined<Enum, UInt16Enum>();
+            IsDefined<Enum, Int16Enum>();
+            IsDefined<Enum, UInt32Enum>();
+            IsDefined<Enum, Int32Enum>();
+            IsDefined<Enum, Int64Enum>();
+            IsDefined<Enum, UInt64Enum>();
+        }
+
+        private static void IsDefined<E, T>()
+            where E : class, IComparable, IFormattable, IConvertible
+            where T : struct, E
+        {
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(sbyte)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(byte)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(ushort)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(short)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(uint)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(int)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(long)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(ulong)));
+
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((sbyte)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((byte)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((ushort)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((short)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((uint)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((int)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((long)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((ulong)2));
         }
 
         [TestMethod]

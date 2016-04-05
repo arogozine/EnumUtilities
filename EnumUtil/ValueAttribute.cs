@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace EnumUtilities
 {
@@ -25,6 +22,7 @@ namespace EnumUtilities
         /// </summary>
         public readonly Y Attribute;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal ValueAttribute(T value, Y attribute)
         {
             this.Value = value;

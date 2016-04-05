@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace EnumUtilities
 {
     /// <summary>
     /// Uses Linq Expressions to compile Enum functions
     /// 
-    /// (c) Alexandre Rogozine 2015
+    /// (c) Alexandre Rogozine 2016
     /// </summary>
     /// <typeparam name="T">Enum Type</typeparam>
     internal static class EnumCompiledCache<T>
@@ -20,6 +21,27 @@ namespace EnumUtilities
             var value = Expression.Parameter(typeof(T));
             UnaryExpression ue = Expression.Convert(value, typeof(Y));
             return Expression.Lambda<Func<T, Y>>(ue, value)
+                .Compile();
+        }
+
+        private static Func<Y, T> GenerateConvertFrom<Y>()
+            where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
+        {
+            var value = Expression.Parameter(typeof(Y));
+            UnaryExpression ue = Expression.Convert(value, typeof(T));
+            return Expression.Lambda<Func<Y, T>>(ue, value)
+                .Compile();
+        }
+        public static Func<Y, bool> GenerateIsDefined<Y>()
+            where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
+        {
+            var value = Expression.Parameter(typeof(Y), "value");
+            var convVal = Expression.Convert(value, typeof(T));
+
+            Expression<Func<T, bool>> e =
+                x => Array.IndexOf(ReflectionCache<T>.FieldValues, x) >= 0;
+
+            return Expression.Lambda<Func<Y, bool>>(Expression.Invoke(e, convVal), value)
                 .Compile();
         }
 
@@ -141,6 +163,28 @@ namespace EnumUtilities
 
         #endregion
 
+        #region Is Defined
+
+        internal static readonly Func<sbyte, bool> IsDefinedSByte = GenerateIsDefined<sbyte>();
+
+        internal static readonly Func<byte, bool> IsDefinedByte = GenerateIsDefined<byte>();
+
+        internal static readonly Func<ushort, bool> IsDefinedUInt16 = GenerateIsDefined<ushort>();
+
+        internal static readonly Func<short, bool> IsDefinedInt16 = GenerateIsDefined<short>();
+
+        internal static readonly Func<uint, bool> IsDefinedUInt32 = GenerateIsDefined<uint>();
+
+        internal static readonly Func<int, bool> IsDefinedInt32 = GenerateIsDefined<int>();
+
+        internal static readonly Func<ulong, bool> IsDefinedUInt64 = GenerateIsDefined<ulong>();
+
+        internal static readonly Func<long, bool> IsDefinedInt64 = GenerateIsDefined<long>();
+
+        #endregion
+
+        #region Bitwise
+
         internal static readonly Func<T, T, T> UnsetFlag = GenerateUnsetFlag();
 
         internal static readonly Func<T, T, T> BitwiseOr = GenerateBitwiseOr();
@@ -152,6 +196,10 @@ namespace EnumUtilities
         internal static readonly Func<T, T> BitwiseNot = GenerateBitwiseNot();
 
         internal static readonly Func<T, T, bool> HasFlag = GenerateHasFlag();
+
+        #endregion
+
+        #region To
 
         internal static readonly Func<T, ulong> ToUInt64 = GenerateConvertTo<ulong>();
 
@@ -172,5 +220,31 @@ namespace EnumUtilities
         internal static readonly Func<T, float> ToSingle = GenerateConvertTo<float>();
 
         internal static readonly Func<T, double> ToDouble = GenerateConvertTo<double>();
+
+        #endregion
+
+        #region From
+
+        internal static readonly Func<ulong, T> FromUInt64 = GenerateConvertFrom<ulong>();
+
+        internal static readonly Func<long, T> FromInt64 = GenerateConvertFrom<long>();
+
+        internal static readonly Func<uint, T> FromUInt32 = GenerateConvertFrom<uint>();
+
+        internal static readonly Func<int, T> FromInt32 = GenerateConvertFrom<int>();
+
+        internal static readonly Func<ushort, T> FromUInt16 = GenerateConvertFrom<ushort>();
+
+        internal static readonly Func<short, T> FromInt16 = GenerateConvertFrom<short>();
+
+        internal static readonly Func<byte, T> FromByte = GenerateConvertFrom<byte>();
+
+        internal static readonly Func<sbyte, T> FromSByte = GenerateConvertFrom<sbyte>();
+
+        internal static readonly Func<float, T> FromSingle = GenerateConvertFrom<float>();
+
+        internal static readonly Func<double, T> FromDouble = GenerateConvertFrom<double>();
+
+        #endregion
     }
 }
