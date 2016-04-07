@@ -77,7 +77,7 @@ namespace EnumUtilities
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>An array that contains the values of the constants in T.</returns>
         public static T[] GetValues<T>() where T : struct, E
-            => (T[])Enum.GetValues(typeof(T));
+            => (T[])typeof(T).GetEnumValues();
 
         /// <summary>
         /// Retrieves an array of the names of the constants in a specified enumeration.        
@@ -86,7 +86,7 @@ namespace EnumUtilities
         /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>A string array of the names of the constants in T.</returns>
         public static string[] GetNames<T>() where T : struct, E
-            => Enum.GetNames(typeof(T));
+            => typeof(T).GetEnumNames();
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
