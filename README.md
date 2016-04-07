@@ -54,6 +54,9 @@ YourEnum notBar = EnumUtil.BitwiseNot(YourEnum.Bar);
 ```
 #### [Flag] Operations
 ```csharp
+// Has Flag?
+bool hasFlag = EnumUtil.HasFlag(YourEnum.Foo | YourEnum.Bar, YourEnum.Bar);
+
 // Set Flag
 YourEnum barSet = EnumUtil.SetFlag(default(YourEnum), YourEnum.Bar);
 
@@ -63,28 +66,32 @@ YourEnum barUnset = EnumUtil.UnsetFlag(barSet, YourEnum.Bar);
 // Toggle Flag On / Off
 YourEnum fooSet = EnumUtil.ToggleFlag(barUnset, YourEnum.Foo);
 
-// Toggle Flag based on boolean
+// Toggle Flag based on a passed in boolean
 YourEnum fooUnset = EnumUtil.ToggleFlag(fooSet, YourEnum.Foo, false);
+
+// Checks whether the FlagsAttribute it defined on an Enum
+// Note: Toggle, Set, Unset, and HasFlag functions do not ensure that
+bool hasFlagsShortcut = EnumUtil.HasFlagsAttribute<YourEnum>();
 ```
 #### Is Defined
 ```csharp
-bool isDef0 = EnumUtil.IsDefined((YourEnum)2);
-bool isDef1 = EnumUtil.IsDefined<YourEnum>("Foo");
+bool enumValDefined = EnumUtil.IsDefined((YourEnum)2);
+bool enumNameDefined = EnumUtil.IsDefined<YourEnum>("Foo");
 
 // Passed in number types get converted automatically
 // to the correct underlying type
-bool isDef3 = EnumUtil.IsDefined<YourEnum>((byte)2);
-bool isDef4 = EnumUtil.IsDefined<YourEnum>((sbyte)2);
-bool isDef5 = EnumUtil.IsDefined<YourEnum>((short)2);
-bool isDef6 = EnumUtil.IsDefined<YourEnum>((ushort)2);
-bool isDef7 = EnumUtil.IsDefined<YourEnum>((int)2);
-bool isDef8 = EnumUtil.IsDefined<YourEnum>((uint)2);
-bool isDef9 = EnumUtil.IsDefined<YourEnum>((long)2);
-bool isDef10 = EnumUtil.IsDefined<YourEnum>((ulong)2);
+// unlike the vanilla Enum.IsDefined which throws an exception 
+bool byteValDefined = EnumUtil.IsDefined<YourEnum>((byte)2);
+bool sbyteValDefined = EnumUtil.IsDefined<YourEnum>((sbyte)2);
+bool shortValDefined = EnumUtil.IsDefined<YourEnum>((short)2);
+bool ushortValDefined = EnumUtil.IsDefined<YourEnum>((ushort)2);
+bool intValDefined = EnumUtil.IsDefined<YourEnum>((int)2);
+bool uintValDefined = EnumUtil.IsDefined<YourEnum>((uint)2);
+bool longValDefined = EnumUtil.IsDefined<YourEnum>((long)2);
+bool ulongValDefined = EnumUtil.IsDefined<YourEnum>((ulong)2);
 ```
-#### Conversion From A Value Type
+#### Conversion From A Number Type
 ```csharp
-// Conversion from a value type to an enum type
 YourEnum val0 = EnumUtil.FromByte<YourEnum>(2);
 YourEnum val1 = EnumUtil.FromSByte<YourEnum>(2);
 YourEnum val2 = EnumUtil.FromInt16<YourEnum>(2);
@@ -96,9 +103,8 @@ YourEnum val7 = EnumUtil.FromUInt64<YourEnum>(2UL);
 YourEnum val8 = EnumUtil.FromSingle<YourEnum>(2f);
 YourEnum val9 = EnumUtil.FromDouble<YourEnum>(2.0);
 ```
-#### Conversion To A Value Type
+#### Conversion To A Number Type
 ```csharp
-// Conversion from an enum type to a value type
 byte byteVal = EnumUtil.ToByte(YourEnum.Foo);
 sbyte sbyteVal = EnumUtil.ToSByte(YourEnum.Foo);
 short shortVal = EnumUtil.ToInt16(YourEnum.Foo);
@@ -112,18 +118,21 @@ double doubleVal = EnumUtil.ToDouble(YourEnum.Bar);
 ```
 #### Reflected Information
 ```csharp
+// Shortcut for typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static)
+FieldInfo[] fields = EnumUtil.GetEnumFields<YourEnum>();
+
+// On the Enumeration itself
 FlagsAttribute attr = EnumUtil.GetAttribute<FlagsAttribute, YourEnum>();
 IEnumerable<DescriptionAttribute> attrs = EnumUtil.GetAttributes<DescriptionAttribute, YourEnum>();
-
-DescriptionAttribute attr2 = EnumUtil.GetAttribute<DescriptionAttribute, YourEnum>(YourEnum.Bar);
-IEnumerable<DescriptionAttribute> attrs3 = EnumUtil.GetAttributes<DescriptionAttribute, YourEnum>(YourEnum.Bar);
-
 bool hasFlagsAttr = EnumUtil.HasAttribute<FlagsAttribute, YourEnum>();
 bool hasFlagsShortcut = EnumUtil.HasFlagsAttribute<YourEnum>();
 
-FieldInfo[] fiedls = EnumUtil.GetEnumFields<YourEnum>();
+// On a field in the enumeration
+DescriptionAttribute attr2 = EnumUtil.GetAttribute<DescriptionAttribute, YourEnum>(YourEnum.Bar);
+IEnumerable<DescriptionAttribute> attrs3 = EnumUtil.GetAttributes<DescriptionAttribute, YourEnum>(YourEnum.Bar);
 
 // Various Read Only Dictionaries
+// with data about the members of an enumeration
 var valueDescription = EnumUtil.GetValueDescription<YourEnum>();
 var valueNameDescription = EnumUtil.GetValueNameDescription<YourEnum>();
 var valueNameAttributes = EnumUtil.GetValueNameAttributes<YourEnum>();
@@ -133,8 +142,6 @@ var valueAttribute = EnumUtil.GetValueAttribute<YourEnum, DescriptionAttribute>(
 var nameValue = EnumUtil.GetNameValue<YourEnum>();
 var valueName = EnumUtil.GetValueName<YourEnum>();
 ```
-
-
 ### Usage with Generics
 You may find using `EnumUtil` to be impossible in a generic function.
 If that is the case, please use the EnumUtilBase class instead,
