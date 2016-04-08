@@ -182,6 +182,10 @@ namespace EnumUtilities
 
         internal static readonly Func<long, bool> IsDefinedInt64 = GenerateIsDefined<long>();
 
+        internal static readonly Func<float, bool> IsDefinedSingle = GenerateIsDefined<float>();
+
+        internal static readonly Func<double, bool> IsDefinedDouble = GenerateIsDefined<double>();
+
         #endregion
 
         #region Bitwise

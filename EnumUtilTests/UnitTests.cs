@@ -285,6 +285,8 @@ namespace EnumUtilTests
             Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(int)));
             Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(long)));
             Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(ulong)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(float)));
+            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(double)));
 
             Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((sbyte)2));
             Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((byte)2));
@@ -294,6 +296,8 @@ namespace EnumUtilTests
             Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((int)2));
             Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((long)2));
             Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((ulong)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((float)2));
+            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((double)2));
         }
 
         [TestMethod]

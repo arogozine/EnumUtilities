@@ -346,6 +346,30 @@ namespace EnumUtilities
         public static bool IsDefined<T>(ulong value) where T : struct, E
             => EnumCompiledCache<T>.IsDefinedUInt64(value);
 
+        /// <summary>
+        /// Returns an idication whether a constant with a specified value exists in a specified
+        /// enumeration
+        /// </summary>
+        /// <typeparam name="T">An enumeration type</typeparam>
+        /// <param name="value">An enumeration value</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+        /// </returns>
+        public static bool IsDefined<T>(float value) where T : struct, E
+            => EnumCompiledCache<T>.IsDefinedSingle(value);
+
+        /// <summary>
+        /// Returns an idication whether a constant with a specified value exists in a specified
+        /// enumeration
+        /// </summary>
+        /// <typeparam name="T">An enumeration type</typeparam>
+        /// <param name="value">An enumeration value</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+        /// </returns>
+        public static bool IsDefined<T>(double value) where T : struct, E
+            => EnumCompiledCache<T>.IsDefinedDouble(value);
+
         #endregion
 
         #region From Numeric Type

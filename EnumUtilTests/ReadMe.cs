@@ -108,6 +108,8 @@ namespace EnumUtilTests
             bool uintValDefined = EnumUtil.IsDefined<YourEnum>((uint)2);
             bool longValDefined = EnumUtil.IsDefined<YourEnum>((long)2);
             bool ulongValDefined = EnumUtil.IsDefined<YourEnum>((ulong)2);
+            bool floatValDefined = EnumUtil.IsDefined<YourEnum>((float)2);
+            bool doubleValDefined = EnumUtil.IsDefined<YourEnum>((double)2);
         }
 
         [TestMethod]
