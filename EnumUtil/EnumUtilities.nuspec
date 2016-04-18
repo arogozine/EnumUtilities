@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/arogozine/EnumUtilities</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides generic enum functions such as bitwise operations, fast HasFlag, and others.</description>
-    <releaseNotes>Added convert to single and double</releaseNotes>
+    <releaseNotes>Added convert to single and double as well as various IsDefined functions</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>Enum Generic Bitwise Flag</tags>
   </metadata>
