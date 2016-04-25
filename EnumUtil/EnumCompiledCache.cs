@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace EnumUtilities
 {
@@ -48,119 +49,89 @@ namespace EnumUtilities
 
         private static Func<T, T, bool> GenerateHasFlag()
         {
-            var value = Expression.Parameter(typeof(T));
-            var flag = Expression.Parameter(typeof(T));
+            var dm = new DynamicMethod("HasFlag",
+                typeof(bool),
+                new[] { typeof(T), typeof(T) },
+                true);
 
-            // Convert from Enum to underlying type (byte, int, long, ...)
-            // to allow bitwise functions to work
-            UnaryExpression valueConverted = Expression.Convert(value, Enum.GetUnderlyingType(typeof(T)));
-            UnaryExpression flagConverted = Expression.Convert(flag, Enum.GetUnderlyingType(typeof(T)));
+            ILGenerator generator = dm.GetILGenerator();
 
-            // (Value & Flag)
-            BinaryExpression bitwiseAnd =
-                Expression.MakeBinary(
-                    ExpressionType.And,
-                    valueConverted,
-                    flagConverted);
+            generator.Emit(OpCodes.Ldarg_0);
+            generator.Emit(OpCodes.Ldarg_1);
+            generator.Emit(OpCodes.And);
+            generator.Emit(OpCodes.Ldarg_1);
+            generator.Emit(OpCodes.Ceq);
+            generator.Emit(OpCodes.Ret);
 
-            // (Value & Flag) == Flag
-            BinaryExpression hasFlagExpression =
-                Expression.MakeBinary(ExpressionType.Equal, bitwiseAnd, flagConverted);
-
-            return Expression.Lambda<Func<T, T, bool>>(hasFlagExpression, value, flag)
-                .Compile();
+            return (Func<T, T, bool>)
+                dm.CreateDelegate(typeof(Func<T, T, bool>));
         }
 
-        private static Func<T, T, T> BitwiseOperator(ExpressionType expressionType)
+        private static Func<T, T, T> BitwiseOperator(string name, OpCode bitwiseCode)
         {
-            ParameterExpression leftVal = Expression.Parameter(typeof(T));
-            ParameterExpression rightVal = Expression.Parameter(typeof(T));
+            var dm = new DynamicMethod(name,
+                typeof(T),
+                new[] { typeof(T), typeof(T) },
+                true);
 
-            // Convert from Enum to Enum's underlying type (byte, int, long, ...)
-            // to allow bitwise functions to work
-            UnaryExpression leftValConverted = Expression.Convert(leftVal, Enum.GetUnderlyingType(typeof(T)));
-            UnaryExpression rightValConverted = Expression.Convert(rightVal, Enum.GetUnderlyingType(typeof(T)));
+            var generator = dm.GetILGenerator();
+            generator.Emit(OpCodes.Ldarg_0);
+            generator.Emit(OpCodes.Ldarg_1);
+            generator.Emit(bitwiseCode);
+            generator.Emit(OpCodes.Ret);
 
-            // left [expressionType] right
-            BinaryExpression binaryExpression =
-                Expression.MakeBinary(
-                    expressionType,
-                    leftValConverted,
-                    rightValConverted);
-
-            // Convert back to Enum
-            UnaryExpression backToEnumType = Expression.Convert(binaryExpression, typeof(T));
-            return Expression.Lambda<Func<T, T, T>>(backToEnumType, leftVal, rightVal)
-                .Compile();
+            return (Func<T, T, T>)
+                dm.CreateDelegate(typeof(Func<T, T, T>));
         }
 
-        private static Func<T, T> BitwiseUnaryOperator(ExpressionType expressionType)
+        private static Func<T, T> GenerateBitwiseNot()
         {
-            var val = Expression.Parameter(typeof(T));
+            var dm = new DynamicMethod("Not",
+                typeof(T),
+                new[] { typeof(T) },
+                true);
 
-            // Convert from Enum to Enum’s underlying type (byte, int, long, …)
-            // to allow bitwise functions to work
-            var valConverted = Expression.Convert(val, Enum.GetUnderlyingType(typeof(T)));
+            var lgen = dm.GetILGenerator();
+            lgen.Emit(OpCodes.Ldarg_0);
+            lgen.Emit(OpCodes.Not);
+            lgen.Emit(OpCodes.Ret);
 
-            var unaryExpression =
-                Expression.MakeUnary(
-                    expressionType,
-                    valConverted,
-                    null);
-
-            // Convert back to Enum
-            var backToEnumType = Expression.Convert(unaryExpression, typeof(T));
-            return Expression.Lambda<Func<T, T>>(backToEnumType, val)
-                .Compile();
+            return (Func<T, T>)dm.CreateDelegate(
+                typeof(Func<T, T>));
         }
 
         private static Func<T, T, T> GenerateUnsetFlag()
         {
-            var val = Expression.Parameter(typeof(T));
-            var flag = Expression.Parameter(typeof(T));
+            var dm = new DynamicMethod("UnsetFlag",
+                typeof(T),
+                new[] { typeof(T), typeof(T) },
+                true);
 
-            // Convert from Enum to Enum’s underlying type (byte, int, long, …)
-            // to allow bitwise functions to work
-            var underlyingType = Enum.GetUnderlyingType(typeof(T));
-            var valConverted = Expression.Convert(val, underlyingType);
-            var flagConverted = Expression.Convert(flag, underlyingType);
+            var lgen = dm.GetILGenerator();
+            lgen.Emit(OpCodes.Ldarg_0);
+            lgen.Emit(OpCodes.Ldarg_1);
+            lgen.Emit(OpCodes.Not);
+            lgen.Emit(OpCodes.And);
+            lgen.Emit(OpCodes.Ret);
 
-            // ~flag
-            var notFlagExpression =
-                Expression.MakeUnary(
-                    ExpressionType.Not,
-                    flagConverted,
-                    null);
-
-            // val & (~flag)
-            var andExpression = Expression.MakeBinary(
-                ExpressionType.And,
-                valConverted,
-                notFlagExpression);
-
-            // Convert back to Enum
-            UnaryExpression backToEnumType = Expression.Convert(andExpression, typeof(T));
-            return Expression.Lambda<Func<T, T, T>>(backToEnumType, val, flag)
-                .Compile();
+            return (Func<T, T, T>)dm.CreateDelegate(
+                typeof(Func<T, T, T>));
         }
 
         private static Func<T, T, T> GenerateBitwiseOr()
         {
-            return BitwiseOperator(ExpressionType.Or);
+            return BitwiseOperator(nameof(OpCodes.Or), OpCodes.Or);
         }
 
         private static Func<T, T, T> GenerateBitwiseAnd()
         {
-            return BitwiseOperator(ExpressionType.And);
+            return BitwiseOperator(nameof(OpCodes.And), OpCodes.And);
         }
 
         private static Func<T, T, T> GenerateBitwiseExclusiveOr()
         {
-            return BitwiseOperator(ExpressionType.ExclusiveOr);
+            return BitwiseOperator(nameof(OpCodes.Xor), OpCodes.Xor);
         }
-
-        private static Func<T, T> GenerateBitwiseNot()
-            => BitwiseUnaryOperator(ExpressionType.Not);
 
         #endregion
 

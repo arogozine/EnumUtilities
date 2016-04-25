@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EmitTests.cs" />
     <Compile Include="Enums\ByteEnum.cs" />
     <Compile Include="Enums\EmptyEnum.cs" />
     <Compile Include="Enums\FlagsEnum.cs" />
