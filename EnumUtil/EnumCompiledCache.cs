@@ -62,12 +62,9 @@ namespace EnumUtilities
 
         private static void DetermineOpCodes(out OpCode? toSbyte, out OpCode? toByte, out OpCode? toInt16, out OpCode? toUInt16, out OpCode? toInt32, out OpCode? toUInt32, out OpCode? toInt64, out OpCode? toUInt64, out OpCode[] toSingle, out OpCode[] toDouble, out OpCode? frSbyte, out OpCode? frByte, out OpCode? frInt16, out OpCode? frUInt16, out OpCode? frInt32, out OpCode? frUInt32, out OpCode? frInt64, out OpCode? frUInt64, out OpCode[] frSingle, out OpCode[] frDouble)
         {
-            string typeName = typeof(T)
-                .GetEnumUnderlyingType().Name;
-
-            switch (typeName)
+            switch (Type.GetTypeCode(typeof(T)))
             {
-                case nameof(SByte):
+                case TypeCode.SByte:
                     // VALUE TYPE -> ENUM
                     frSbyte = null;
                     frByte = OpCodes.Conv_I1;
@@ -92,7 +89,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R8 };
                     break;
 
-                case nameof(Byte):
+                case TypeCode.Byte:
                     // VALUE TYPE -> ENUM
                     frSbyte = OpCodes.Conv_U1;
                     frByte = null;
@@ -117,7 +114,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R8 };
                     break;
 
-                case nameof(Int16):
+                case TypeCode.Int16:
                     // VALUE TYPE -> ENUM
                     frSbyte = null;
                     frByte = null;
@@ -142,7 +139,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R8 };
                     break;
 
-                case nameof(UInt16):
+                case TypeCode.UInt16:
                     // VALUE TYPE -> ENUM
                     frSbyte = OpCodes.Conv_U2;
                     frByte = null;
@@ -167,7 +164,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R8 };
                     break;
 
-                case nameof(Int32):
+                case TypeCode.Int32:
                     // VALUE TYPE -> ENUM
                     frSbyte = null;
                     frByte = null;
@@ -192,7 +189,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R8 };
                     break;
 
-                case nameof(UInt32):
+                case TypeCode.UInt32:
                     // VALUE TYPE -> ENUM
                     frSbyte = null;
                     frByte = null;
@@ -217,7 +214,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R_Un, OpCodes.Conv_R8 };
                     break;
 
-                case nameof(Int64):
+                case TypeCode.Int64:
                     // VALUE TYPE -> ENUM
                     frSbyte = OpCodes.Conv_I8;
                     frByte = OpCodes.Conv_U8;
@@ -242,7 +239,7 @@ namespace EnumUtilities
                     toDouble = new[] { OpCodes.Conv_R8 };
                     break;
 
-                case nameof(UInt64):
+                case TypeCode.UInt64:
                     // VALUE TYPE -> ENUM
                     frSbyte = OpCodes.Conv_I8;
                     frByte = OpCodes.Conv_U8;
