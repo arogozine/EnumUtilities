@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EnumUtilTests</RootNamespace>
     <AssemblyName>EnumUtilTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -71,8 +71,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EnumUtil\EnumUtilities.csproj">
-      <Project>{f960fc51-f6c9-4ca8-be59-eb1d5388d9ef}</Project>
+    <ProjectReference Include="..\EnumUtilities\EnumUtilities.csproj">
+      <Project>{6b2e2abd-6fed-43d3-956e-f5fa950b965e}</Project>
       <Name>EnumUtilities</Name>
     </ProjectReference>
   </ItemGroup>
