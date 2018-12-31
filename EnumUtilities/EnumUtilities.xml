@@ -1,0 +1,650 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EnumUtilities</name>
+    </assembly>
+    <members>
+        <member name="T:EnumUtilities.EnumCompiledCache`1">
+            <summary>
+            Uses Linq Expressions to compile Enum functions
+            
+            (c) Alexandre Rogozine 2016
+            </summary>
+            <typeparam name="T">Enum Type</typeparam>
+        </member>
+        <member name="T:EnumUtilities.EnumUtil">
+            <summary>
+            Enum Utilities.
+            
+            Provides type safe Enum extension methods
+            by "bypassing" .NET restrictions.
+            </summary>
+        </member>
+        <member name="T:EnumUtilities.EnumUtilBase`1">
+            <summary>
+            <para>Provides all the functions of EnumUtil, but requires two constrains - first must be System.Enum and second a specific enumeration type</para>
+            <para>Do not use this class directly if possible; Go through <c>EnumUtil</c> instead.</para>
+            </summary>
+            <typeparam name="E">System.Enum</typeparam>
+        </member>
+        <member name="T:EnumUtilities.EnumUtilUnsafe`1">
+            <summary>
+            Unsafe Version.
+            Use only when necessary.
+            </summary>
+            <typeparam name="E">System.Enum</typeparam>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetUnderlyingType``1">
+            <summary>
+            Returns the underlying type of the specified enumeration.        
+            Wrapper for <seealso cref="M:System.Enum.GetUnderlyingType(System.Type)"/>
+            </summary>
+            <typeparam name="T">The enumeration whose underlying type will be retrieved.</typeparam>
+            <returns>The underlying type of T.</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetName``1(``0)">
+            <summary>
+            Returns the Name of a certain Enum Value.
+            Wrapper for <seealso cref="M:System.Enum.GetName(System.Type,System.Object)"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>Name of the enum value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.Parse``1(System.String)">
+            <summary>
+            Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+            Wrapper for <seealso cref="M:System.Enum.Parse(System.Type,System.String)"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">A string containing the name or value to convert.</param>
+            <returns>An object of type T whose value is represented by value.</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.Parse``1(System.String,System.Boolean)">
+            <summary>
+            Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter specifies whether the operation is case-insensitive.
+            Wrapper for <seealso cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">A string containing the name or value to convert.</param>
+            <param name="ignoreCase">true to ignore case; false to regard case.</param>
+            <returns>An object of type T whose value is represented by value.</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValues``1">
+            <summary>
+            Retrieves an array of the values of the constants in a specified enumeration.        
+            Wrapper for <seealso cref="M:System.Enum.GetValues(System.Type)"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>An array that contains the values of the constants in T.</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetNames``1">
+            <summary>
+            Retrieves an array of the names of the constants in a specified enumeration.        
+            Wrapper for <seealso cref="M:System.Enum.GetNames(System.Type)"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>A string array of the names of the constants in T.</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.TryParse``1(System.String,``0@)">
+            <summary>
+            Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+            Wrapper for <seealso cref="M:System.Enum.TryParse``1(System.String,``0@)"/>
+            </summary>
+            <typeparam name="T">The enumeration type to which to convert value.</typeparam>
+            <param name="value">
+            The string representation of the enumeration name or underlying value to convert.
+            </param>
+            <param name="result">Contains an object of type <c>T</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+            <returns>
+            true if the value parameter was converted successfully; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.TryParse``1(System.String,System.Boolean,``0@)">
+            <summary>
+            Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+            A parameter specifies whether the operation is case-sensitive.
+            The return value indicates whether the conversion succeeded.
+            <seealso cref="M:System.Enum.TryParse``1(System.String,System.Boolean,``0@)"/>
+            </summary>
+            <typeparam name="T">The enumeration type to which to convert value.</typeparam>
+            <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
+            <param name="ignoreCase">true to ignore case; false to consider case.</param>
+            <param name="result">Contains an object of type <c>T</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+            <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.BitwiseOr``1(``0,``0)">
+            <summary>
+            Bitwise OR
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="left">An enumeration value</param>
+            <param name="right">An enumeration value</param>
+            <returns><c>left | right</c></returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.BitwiseAnd``1(``0,``0)">
+            <summary>
+            Bitwise AND
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="left">An enumeration value</param>
+            <param name="right">An enumeration value</param>
+            <returns><c>left &amp; right</c></returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.BitwiseExclusiveOr``1(``0,``0)">
+            <summary>
+            Bitwise Exclusive OR
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="left">An enumeration value</param>
+            <param name="right">An enumeration value</param>
+            <returns><c>left ^ right</c></returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.BitwiseNot``1(``0)">
+            <summary>
+            Bitwise NOT
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns><c>~value</c></returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.HasFlag``1(``0,``0)">
+            <summary>
+            Checks whether a flag exists.
+            This function does not check for <c>FlagsAttribute</c>.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <param name="flag">An enumeration value</param>
+            <returns>
+            true if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.SetFlag``1(``0,``0)">
+            <summary>
+            Returns the result of bitwise or between the passed in value and flag.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <param name="flag">An enumeration value</param>
+            <returns>Value with the specified flag set</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.UnsetFlag``1(``0,``0)">
+            <summary>
+            Returns the result of bitwise and for value and bitwise not of the flag.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <param name="flag">An enumeration value</param>
+            <returns>Value with the specified flag unset</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToggleFlag``1(``0,``0)">
+            <summary>
+            Returns the result of bitwise exclusive or for the value and the flag.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <param name="flag">An enumeration value</param>
+            <returns>Value with the specified flag toggled</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToggleFlag``1(``0,``0,System.Boolean)">
+            <summary>
+            Sets or Unsets a specified flag.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <param name="flag">An enumeration value</param>
+            <param name="flagSet">true to set and false to unset</param>
+            <returns>Value with the specified flag toggled</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(``0)">
+            <summary>
+            Checks if the value is valid for the enum.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+            true if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+            <remarks>
+              <para>
+                For the sake of providing a typesafe API alternative to <c>Enum.IsDefined(typeof(T), value)</c>.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.String)">
+            <summary>
+            Returns an indication whether a constant with a specified name exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="name">An enumeration value</param>
+            <returns>
+            <c>true</c> if <paramref name="name"/> is valid for <typeparamref name="T"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="name"/> is null
+            </exception>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.SByte)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.Byte)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.UInt16)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.Int16)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.Int32)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.UInt32)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.Int64)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.UInt64)">
+            <summary>
+            Returns an indication whether a constant with a specified value exists in a specified
+            enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.Single)">
+            <summary>
+            Returns an idication whether a constant with a specified value exists in a specified
+            enumeration
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.IsDefined``1(System.Double)">
+            <summary>
+            Returns an idication whether a constant with a specified value exists in a specified
+            enumeration
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>
+                <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromByte``1(System.Byte)">
+            <summary>
+            Converts a byte to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromSByte``1(System.SByte)">
+            <summary>
+            Converts a sbyte to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromInt16``1(System.Int16)">
+            <summary>
+            Converts a short to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromUInt16``1(System.UInt16)">
+            <summary>
+            Converts a ushort to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromInt32``1(System.Int32)">
+            <summary>
+            Converts an int to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromUInt32``1(System.UInt32)">
+            <summary>
+            Converts a uint to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromInt64``1(System.Int64)">
+            <summary>
+            Converts a long to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromUInt64``1(System.UInt64)">
+            <summary>
+            Converts a ulong to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromSingle``1(System.Single)">
+            <summary>
+            Converts a float to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.FromDouble``1(System.Double)">
+            <summary>
+            Converts a double to a specified enumeration <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">Enumeration Type</typeparam>
+            <param name="value">value to convert</param>
+            <returns><paramref name="value"/> as the enumeration type</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToByte``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to a byte.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>An 8-bit signed integer that is equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToSByte``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to a signed byte.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>An 8-bit unsigned integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToInt16``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to a short.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A 16-bit signed integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToUInt16``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to an unsigned short.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A 16-bit unsigned integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToInt32``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to an int.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A 32-bit signed integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToUInt32``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to an unsigned int.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A 32-bit unsigned integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToInt64``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to a long.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A 64-bit signed integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToUInt64``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to an unsigned long.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A 64-bit unsigned integer that is cast equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToSingle``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to a float.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A single precision floating point number that is case equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.ToDouble``1(``0)">
+            <summary>
+            Converts the value of the specified enumeration to a double.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">An enumeration value</param>
+            <returns>A double precision floating point number that is case equivalent to the enumeration value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetAttribute``2">
+            <summary>
+            Retrieves a specific attribute on the enumeration type
+            </summary>
+            <typeparam name="Y">Attribute to Retrieve</typeparam>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Custom Attribute on the Enum</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetAttributes``2">
+            <summary>
+            Retrieves a specific attributes on the Enum
+            </summary>
+            <typeparam name="Y">Attributes to Retrieve</typeparam>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Custom Attributes on the Enum</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetAttribute``2(``1)">
+            <summary>
+            Retrieves a specific attribute on an enum value
+            </summary>
+            <typeparam name="Y">Attribute Type</typeparam>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">Enum Value with the Attribute</param>
+            <returns>Attribute Y on the enum value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetAttributes``2(``1)">
+            <summary>
+            Retrieves specific attributes on an enum value
+            </summary>
+            <typeparam name="Y">Attribute Type</typeparam>
+            <typeparam name="T">An enumeration type</typeparam>
+            <param name="value">Enum Value with Attributes</param>
+            <returns>Attributes on the enum value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.HasAttribute``2">
+            <summary>
+            Tells whether the Enum has a specific attribute.
+            </summary>
+            <typeparam name="Y">An enumeration type</typeparam>
+            <typeparam name="T">Attribute Type</typeparam>
+            <returns>Whether or not the enum has a certain attribute</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.HasFlagsAttribute``1">
+            <summary>
+            Returns whether or not the Enum has the FlagsAttribute
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Whether or not the Enum has FlagsAttribute</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetEnumFields``1">
+            <summary>
+            Returns FieldInfo array for the enumeration.
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>FieldInfo Array for the defined values in the Enumeration</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValueDescription``1">
+            <summary>
+            Generates a Dictionary of enumeration value to DescriptionAttribute.
+            <seealso cref="T:System.ComponentModel.DescriptionAttribute"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Map of enumeration value to its description</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValueNameDescription``1">
+            <summary>
+            Generates a Dictionary of enum value to name and the description attribute.
+            <seealso cref="T:System.ComponentModel.DescriptionAttribute"/>
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Map of enumeration value to name and description</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValueNameAttributes``1">
+            <summary>
+            Generates a Dictionary of enum value to enum name and attributes
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Map of value to name and attributes</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetNameValueAttribute``2">
+            <summary>
+            Generates a Dictionary of Enum Value to Enum Value and Attribute
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <typeparam name="Y">The type of attribute</typeparam>
+            <returns>Map of name to value and attribute</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValueNameAttribute``2">
+            <summary>
+            Generates a Dictionary of Enum Value to Name and Attribute
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <typeparam name="Y">The type of attribute</typeparam>
+            <returns>Map of value to name and attribute</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValueAttribute``2">
+            <summary>
+            Generates a Dictionary of Enum Value to Attribute Y
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <typeparam name="Y">The type of attribute</typeparam>
+            <returns>Map of value to attribute</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetNameValue``1">
+            <summary>
+            Generates a Dictionary of Enum Name to Enum Value
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Map of name to value</returns>
+        </member>
+        <member name="M:EnumUtilities.EnumUtilUnsafe`1.GetValueName``1">
+            <summary>
+            Generates a Dictionary of Enum Value to Enum Name
+            </summary>
+            <typeparam name="T">An enumeration type</typeparam>
+            <returns>Map of value to name</returns>
+        </member>
+        <member name="T:EnumUtilities.NameAttribute`1">
+            <summary>
+            Holds a Name and an Attribute for a specific enumeration.
+            </summary>
+            <typeparam name="Y">An Attribute Type</typeparam>
+        </member>
+        <member name="F:EnumUtilities.NameAttribute`1.Name">
+            <summary>
+            Name for the enumeration value.
+            </summary>
+        </member>
+        <member name="F:EnumUtilities.NameAttribute`1.Attribute">
+            <summary>
+            Attribute associated with the enumeration value.
+            </summary>
+        </member>
+        <member name="T:EnumUtilities.ValueAttribute`2">
+            <summary>
+            Hold the Value and the Attribute for a specific enumeration.
+            </summary>
+            <typeparam name="T">Enumeration type</typeparam>
+            <typeparam name="Y">Attribute type</typeparam>
+        </member>
+        <member name="F:EnumUtilities.ValueAttribute`2.Value">
+            <summary>
+            Enumeration Value
+            </summary>
+        </member>
+        <member name="F:EnumUtilities.ValueAttribute`2.Attribute">
+            <summary>
+            Enumeration Attribute
+            </summary>
+        </member>
+    </members>
+</doc>

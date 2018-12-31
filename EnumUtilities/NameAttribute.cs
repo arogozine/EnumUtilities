@@ -11,7 +11,7 @@ namespace EnumUtilities
     /// Holds a Name and an Attribute for a specific enumeration.
     /// </summary>
     /// <typeparam name="Y">An Attribute Type</typeparam>
-    public struct NameAttribute<Y>
+    public readonly struct NameAttribute<Y>
         where Y : Attribute
     {
         /// <summary>

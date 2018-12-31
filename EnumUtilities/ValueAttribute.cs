@@ -8,7 +8,7 @@ namespace EnumUtilities
     /// </summary>
     /// <typeparam name="T">Enumeration type</typeparam>
     /// <typeparam name="Y">Attribute type</typeparam>
-    public struct ValueAttribute<T, Y>
+    public readonly struct ValueAttribute<T, Y>
         where Y : Attribute
         where T : struct, IComparable, IFormattable, IConvertible
     {
