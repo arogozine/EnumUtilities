@@ -15,10 +15,10 @@ namespace EnumUtilTests
         [TestMethod]
         public void TestNoAttributes()
         {
-            var vn = EnumUtil.GetValueName<Int32Enum>();
-            var nv = EnumUtil.GetNameValue<Int32Enum>();
-            var vna = EnumUtil.GetValueNameAttributes<Int32Enum>();
-            var vnd = EnumUtil.GetValueNameDescription<Int32Enum>();
+            var vn = EnumUtil<Int32Enum>.GetValueName();
+            var nv = EnumUtil<Int32Enum>.GetNameValue();
+            var vna = EnumUtil<Int32Enum>.GetValueNameAttributes();
+            var vnd = EnumUtil<Int32Enum>.GetValueNameDescription();
 
             Assert.IsNotNull(vn);
             Assert.IsNotNull(nv);
@@ -59,10 +59,10 @@ namespace EnumUtilTests
         [TestMethod]
         public void TestAttributes2()
         {
-            var vn = EnumUtil.GetValueName<FlagsEnum>();
-            var nv = EnumUtil.GetNameValue<FlagsEnum>();
-            var vna = EnumUtil.GetValueNameAttributes<FlagsEnum>();
-            var vnd = EnumUtil.GetValueNameDescription<FlagsEnum>();
+            var vn = EnumUtil<FlagsEnum>.GetValueName();
+            var nv = EnumUtil<FlagsEnum>.GetNameValue();
+            var vna = EnumUtil<FlagsEnum>.GetValueNameAttributes();
+            var vnd = EnumUtil<FlagsEnum>.GetValueNameDescription();
 
             Assert.IsNotNull(vn);
             Assert.IsNotNull(nv);
@@ -103,13 +103,13 @@ namespace EnumUtilTests
         [TestMethod]
         public void TestAttributes()
         {
-            Assert.IsTrue(EnumUtil.HasFlagsAttribute<FlagsEnum>());
-            Assert.IsTrue(EnumUtil.HasAttribute<FlagsAttribute, FlagsEnum>());
-            Assert.IsNotNull(EnumUtil.GetAttribute<FlagsAttribute, FlagsEnum>());
+            Assert.IsTrue(EnumUtil<FlagsEnum>.HasFlagsAttribute());
+            Assert.IsTrue(EnumUtil<FlagsEnum>.HasAttribute<FlagsAttribute>());
+            Assert.IsNotNull(EnumUtil<FlagsEnum>.GetAttribute<FlagsAttribute>());
 
-            foreach (FlagsEnum fe in EnumUtil.GetValues<FlagsEnum>())
+            foreach (FlagsEnum fe in EnumUtil<FlagsEnum>.GetValues())
             {
-                System.ComponentModel.DescriptionAttribute da = EnumUtil.GetAttribute<System.ComponentModel.DescriptionAttribute, FlagsEnum>(fe);
+                System.ComponentModel.DescriptionAttribute da = EnumUtil<FlagsEnum>.GetAttribute<System.ComponentModel.DescriptionAttribute>(fe);
                 Assert.IsNotNull(da);
                 Assert.IsFalse(string.IsNullOrEmpty(da.Description));
             }
@@ -117,38 +117,37 @@ namespace EnumUtilTests
         }
 
         [TestMethod]
-        public void Int32Test() => RunTests<Enum, Int32Enum>();
+        public void Int32Test() => RunTests<Int32Enum>();
 
         [TestMethod]
-        public void UInt32Test() => RunTests<Enum, UInt32Enum>();
+        public void UInt32Test() => RunTests<UInt32Enum>();
 
         [TestMethod]
-        public void Int64Test() => RunTests<Enum, Int64Enum>();
+        public void Int64Test() => RunTests<Int64Enum>();
 
         [TestMethod]
-        public void UInt64Test() => RunTests<Enum, UInt64Enum>();
+        public void UInt64Test() => RunTests<UInt64Enum>();
 
         [TestMethod]
-        public void ByteTest() => RunTests<Enum, ByteEnum>();
+        public void ByteTest() => RunTests<ByteEnum>();
 
         [TestMethod]
-        public void Int16Test() => RunTests<Enum, Int16Enum>();
+        public void Int16Test() => RunTests<Int16Enum>();
 
         [TestMethod]
-        public void UInt16Test() => RunTests<Enum, UInt16Enum>();
+        public void UInt16Test() => RunTests<UInt16Enum>();
 
         [TestMethod]
-        public void SByteTest() => RunTests<Enum, SByteEnum>();
+        public void SByteTest() => RunTests<SByteEnum>();
 
-        private static void RunTests<E, T>()
-            where E : class, IComparable, IFormattable, IConvertible
-            where T : struct, E
+        private static void RunTests<TEnum>()
+            where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
         {
-            string[] names = EnumUtilBase<E>.GetNames<T>();
-            T[] values = EnumUtilBase<E>.GetValues<T>();
+            string[] names = EnumUtil<TEnum>.GetNames();
+            TEnum[] values = EnumUtil<TEnum>.GetValues();
 
-            IReadOnlyDictionary<T, string> nameValues = 
-                EnumUtilBase<E>.GetValueName<T>();
+            IReadOnlyDictionary<TEnum, string> nameValues = 
+                EnumUtil<TEnum>.GetValueName();
             Assert.IsNotNull(nameValues);
 
             foreach (var nm in nameValues)
@@ -157,77 +156,77 @@ namespace EnumUtilTests
             }
 
             Assert.IsTrue(nameValues.Count == values.Length);
-            Assert.IsTrue(Enum.GetValues(typeof(T)).Length == values.Length);
+            Assert.IsTrue(Enum.GetValues(typeof(TEnum)).Length == values.Length);
             Assert.IsTrue(names.Length == values.Length);
 
-            T aggregate = values.Aggregate((x, y) => EnumUtilBase<E>.BitwiseOr<T>(x, y));
+            TEnum aggregate = values.Aggregate((x, y) => EnumUtil<TEnum>.BitwiseOr(x, y));
             Assert.IsTrue(Convert.ToInt32(aggregate) == 15);
-            T aggregate2 = values.Aggregate((x, y) => EnumUtilBase<E>.BitwiseAnd<T>(x, y));
+            TEnum aggregate2 = values.Aggregate((x, y) => EnumUtil<TEnum>.BitwiseAnd(x, y));
             Assert.IsTrue(Convert.ToInt32(aggregate2) == 0);
 
             for (int i = 0; i < values.Length; i++)
             {
-                T value = values[i];
+                TEnum value = values[i];
                 string name = names[i];
 
-                byte byteVal = EnumUtilBase<E>.ToByte(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromByte<T>(byteVal), value);
+                byte byteVal = EnumUtil<TEnum>.ToByte(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromByte(byteVal), value);
 
-                sbyte sbyteVal = EnumUtilBase<E>.ToSByte(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromSByte<T>(sbyteVal), value);
+                sbyte sbyteVal = EnumUtil<TEnum>.ToSByte(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromSByte(sbyteVal), value);
 
-                short int16Val = EnumUtilBase<E>.ToInt16(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromInt16<T>(int16Val), value);
+                short int16Val = EnumUtil<TEnum>.ToInt16(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromInt16(int16Val), value);
 
-                ushort uint16Val = EnumUtilBase<E>.ToUInt16(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromUInt16<T>(uint16Val), value);
+                ushort uint16Val = EnumUtil<TEnum>.ToUInt16(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromUInt16(uint16Val), value);
 
-                int intVal = EnumUtilBase<E>.ToInt32(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromInt32<T>(intVal), value);
+                int intVal = EnumUtil<TEnum>.ToInt32(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromInt32(intVal), value);
 
-                uint uintVal = EnumUtilBase<E>.ToUInt32(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromUInt32<T>(uintVal), value);
+                uint uintVal = EnumUtil<TEnum>.ToUInt32(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromUInt32(uintVal), value);
 
-                long longVal = EnumUtilBase<E>.ToInt64(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromInt64<T>(longVal), value);
+                long longVal = EnumUtil<TEnum>.ToInt64(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromInt64(longVal), value);
 
-                ulong val = EnumUtilBase<E>.ToUInt64(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromUInt64<T>(val), value);
+                ulong val = EnumUtil<TEnum>.ToUInt64(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromUInt64(val), value);
 
-                float floatVal = EnumUtilBase<E>.ToSingle(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromSingle<T>(floatVal), value);
+                float floatVal = EnumUtil<TEnum>.ToSingle(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromSingle(floatVal), value);
 
-                double doubleVal = EnumUtilBase<E>.ToDouble(value);
-                Assert.AreEqual(EnumUtilBase<E>.FromDouble<T>(doubleVal), value);
+                double doubleVal = EnumUtil<TEnum>.ToDouble(value);
+                Assert.AreEqual(EnumUtil<TEnum>.FromDouble(doubleVal), value);
 
-                Assert.IsTrue(EnumUtilBase<E>.BitwiseOr(value, value).Equals(value));
-                Assert.IsTrue(EnumUtilBase<E>.BitwiseAnd(value, value).Equals(value));
-                Assert.IsTrue(EnumUtilBase<E>.BitwiseExclusiveOr(value, value).Equals(default(T)));
+                Assert.IsTrue(EnumUtil<TEnum>.BitwiseOr(value, value).Equals(value));
+                Assert.IsTrue(EnumUtil<TEnum>.BitwiseAnd(value, value).Equals(value));
+                Assert.IsTrue(EnumUtil<TEnum>.BitwiseExclusiveOr(value, value).Equals(default(TEnum)));
 
-                Assert.IsTrue(EnumUtilBase<E>.HasFlag(aggregate, value));
-                Assert.IsFalse(EnumUtilBase<E>.HasFlag(value, aggregate));
-                Assert.IsTrue(EnumUtilBase<E>.HasFlag(aggregate, default(T)));
+                Assert.IsTrue(EnumUtil<TEnum>.HasFlag(aggregate, value));
+                Assert.IsFalse(EnumUtil<TEnum>.HasFlag(value, aggregate));
+                Assert.IsTrue(EnumUtil<TEnum>.HasFlag(aggregate, default));
 
-                Assert.IsFalse(EnumUtilBase<E>.HasFlagsAttribute<T>());
-                Assert.IsFalse(EnumUtilBase<E>.HasAttribute<FlagsAttribute, T>());
+                Assert.IsFalse(EnumUtil<TEnum>.HasFlagsAttribute());
+                Assert.IsFalse(EnumUtil<TEnum>.HasAttribute<FlagsAttribute>());
 
-                Assert.IsTrue(EnumUtilBase<E>.IsDefined(value));
-                Assert.IsFalse(EnumUtilBase<E>.IsDefined(default(T)));
+                Assert.IsTrue(EnumUtil<TEnum>.IsDefined(value));
+                Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(TEnum)));
 
-                Assert.AreEqual(name, EnumUtilBase<E>.GetName(value));
-                Assert.AreEqual(value, EnumUtilBase<E>.Parse<T>(name));
+                Assert.AreEqual(name, EnumUtil<TEnum>.GetName(value));
+                Assert.AreEqual(value, EnumUtil<TEnum>.Parse(name));
 
-                Type t = EnumUtilBase<E>.GetUnderlyingType<T>();
-                Assert.AreEqual(t, Enum.GetUnderlyingType(typeof(T)));
+                Type t = EnumUtil<TEnum>.GetUnderlyingType();
+                Assert.AreEqual(t, Enum.GetUnderlyingType(typeof(TEnum)));
 
-                Assert.IsTrue(EnumUtilBase<E>.TryParse(name, out value));
-                Assert.IsTrue(EnumUtilBase<E>.TryParse(name, false, out value));
-                Assert.IsFalse(EnumUtilBase<E>.TryParse(name.ToLower(), false, out value));
-                Assert.IsFalse(EnumUtilBase<E>.TryParse(name.ToUpper(), false, out value));
+                Assert.IsTrue(EnumUtil<TEnum>.TryParse(name, out value));
+                Assert.IsTrue(EnumUtil<TEnum>.TryParse(name, false, out value));
+                Assert.IsFalse(EnumUtil<TEnum>.TryParse(name.ToLower(), false, out value));
+                Assert.IsFalse(EnumUtil<TEnum>.TryParse(name.ToUpper(), false, out value));
 
-                Assert.IsTrue(EnumUtilBase<E>.TryParse(name.ToLower(), true, out value));
-                Assert.IsTrue(EnumUtilBase<E>.TryParse(name.ToUpper(), true, out value));
-                Assert.IsTrue(EnumUtilBase<E>.TryParse(name, true, out value));
+                Assert.IsTrue(EnumUtil<TEnum>.TryParse(name.ToLower(), true, out value));
+                Assert.IsTrue(EnumUtil<TEnum>.TryParse(name.ToUpper(), true, out value));
+                Assert.IsTrue(EnumUtil<TEnum>.TryParse(name, true, out value));
             }
         }
 
@@ -235,76 +234,75 @@ namespace EnumUtilTests
         public void SetFlag()
         {
             var value = default(FlagsEnum);
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.Two, EnumUtil.SetFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.SetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil<FlagsEnum>.SetFlag(value, FlagsEnum.Two));
 
             value = FlagsEnum.One;
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.SetFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.SetFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.SetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil<FlagsEnum>.SetFlag(value, FlagsEnum.Two));
         }
 
         [TestMethod]
         public void IsDefinedString()
         {
-            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.One)));
-            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Two)));
-            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Four)));
-            Assert.IsTrue(EnumUtil.IsDefined<FlagsEnum>(EnumUtil.GetName(FlagsEnum.Eight)));
-            Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(string.Empty));
+            Assert.IsTrue(EnumUtil<FlagsEnum>.IsDefined(EnumUtil<FlagsEnum>.GetName(FlagsEnum.One)));
+            Assert.IsTrue(EnumUtil<FlagsEnum>.IsDefined(EnumUtil<FlagsEnum>.GetName(FlagsEnum.Two)));
+            Assert.IsTrue(EnumUtil<FlagsEnum>.IsDefined(EnumUtil<FlagsEnum>.GetName(FlagsEnum.Four)));
+            Assert.IsTrue(EnumUtil<FlagsEnum>.IsDefined(EnumUtil<FlagsEnum>.GetName(FlagsEnum.Eight)));
+            Assert.IsFalse(EnumUtil<FlagsEnum>.IsDefined(string.Empty));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsDefinedStringNull()
         {
-            Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(null));
+            Assert.IsFalse(EnumUtil<FlagsEnum>.IsDefined(null));
         }
 
         [TestMethod]
         public void IsDefinedUnderlyingType() {
             
-            IsDefined<Enum, SByteEnum>();
-            IsDefined<Enum, ByteEnum>();
-            IsDefined<Enum, UInt16Enum>();
-            IsDefined<Enum, Int16Enum>();
-            IsDefined<Enum, UInt32Enum>();
-            IsDefined<Enum, Int32Enum>();
-            IsDefined<Enum, Int64Enum>();
-            IsDefined<Enum, UInt64Enum>();
+            IsDefined<SByteEnum>();
+            IsDefined<ByteEnum>();
+            IsDefined<UInt16Enum>();
+            IsDefined<Int16Enum>();
+            IsDefined<UInt32Enum>();
+            IsDefined<Int32Enum>();
+            IsDefined<Int64Enum>();
+            IsDefined<UInt64Enum>();
         }
 
-        private static void IsDefined<E, T>()
-            where E : class, IComparable, IFormattable, IConvertible
-            where T : struct, E
+        private static void IsDefined<TEnum>()
+            where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
         {
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(sbyte)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(byte)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(ushort)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(short)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(uint)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(int)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(long)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(ulong)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(float)));
-            Assert.IsFalse(EnumUtilBase<E>.IsDefined<T>(default(double)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(sbyte)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(byte)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(ushort)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(short)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(uint)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(int)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(long)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(ulong)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(float)));
+            Assert.IsFalse(EnumUtil<TEnum>.IsDefined(default(double)));
 
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((sbyte)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((byte)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((ushort)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((short)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((uint)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((int)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((long)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((ulong)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((float)2));
-            Assert.IsTrue(EnumUtilBase<E>.IsDefined<T>((double)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((sbyte)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((byte)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((ushort)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((short)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((uint)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((int)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((long)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((ulong)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((float)2));
+            Assert.IsTrue(EnumUtil<TEnum>.IsDefined((double)2));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsDefinedNullString()
         {
-            Assert.IsFalse(EnumUtil.IsDefined<FlagsEnum>(null));
+            Assert.IsFalse(EnumUtil<FlagsEnum>.IsDefined(null));
         }
 
         [TestMethod]
@@ -312,18 +310,18 @@ namespace EnumUtilTests
         {
             // Removing flags from empty value is no-op.
             var value = default(FlagsEnum);
-            Assert.AreEqual(value, EnumUtil.UnsetFlag(value, FlagsEnum.One));
-            Assert.AreEqual(value, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(value, EnumUtil<FlagsEnum>.UnsetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(value, EnumUtil<FlagsEnum>.UnsetFlag(value, FlagsEnum.Two));
 
             // Starting with one flag.
             value = FlagsEnum.One;
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.UnsetFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil<FlagsEnum>.UnsetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.UnsetFlag(value, FlagsEnum.Two));
 
             // Starting with two flags.
             value = FlagsEnum.One | FlagsEnum.Two;
-            Assert.AreEqual(FlagsEnum.Two, EnumUtil.UnsetFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.UnsetFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil<FlagsEnum>.UnsetFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.UnsetFlag(value, FlagsEnum.Two));
         }
 
         [TestMethod]
@@ -331,52 +329,52 @@ namespace EnumUtilTests
         {
             var value = default(FlagsEnum);
             // Toggling will effectively set when unset.
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two));
 
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.One, true));
-            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two, true));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One, true));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two, true));
 
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two, false));
 
             value = FlagsEnum.One;
             // Toggling will of course unset if already set.
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two));
 
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.One, true));
-            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two, true));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One, true));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two, true));
 
-            Assert.AreEqual(default(FlagsEnum), EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
+            Assert.AreEqual(default(FlagsEnum), EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two, false));
 
             // Starting with two flags.
             value = FlagsEnum.One | FlagsEnum.Two;
-            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One));
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two));
 
-            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One, true));
-            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.Two, true));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One, true));
+            Assert.AreEqual(FlagsEnum.One | FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two, true));
 
-            Assert.AreEqual(FlagsEnum.Two, EnumUtil.ToggleFlag(value, FlagsEnum.One, false));
-            Assert.AreEqual(FlagsEnum.One, EnumUtil.ToggleFlag(value, FlagsEnum.Two, false));
+            Assert.AreEqual(FlagsEnum.Two, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.One, false));
+            Assert.AreEqual(FlagsEnum.One, EnumUtil<FlagsEnum>.ToggleFlag(value, FlagsEnum.Two, false));
         }
 
         [TestMethod]
         public void HasFlag()
         {
-            foreach(FlagsEnum flag in EnumUtil.GetValues<FlagsEnum>())
+            foreach(FlagsEnum flag in EnumUtil<FlagsEnum>.GetValues())
             {
-                Assert.IsTrue(EnumUtil.HasFlag(flag, flag));
-                Assert.IsFalse(EnumUtil.HasFlag(default(FlagsEnum), flag));
+                Assert.IsTrue(EnumUtil<FlagsEnum>.HasFlag(flag, flag));
+                Assert.IsFalse(EnumUtil<FlagsEnum>.HasFlag(default(FlagsEnum), flag));
             }
         }
 
         [TestMethod]
         public void HasFlagDefault()
         {
-            bool resultEnumUtil = EnumUtil.HasFlag(default(FlagsEnum), default(FlagsEnum));
+            bool resultEnumUtil = EnumUtil<FlagsEnum>.HasFlag(default(FlagsEnum), default(FlagsEnum));
             bool resultOfficial = default(FlagsEnum).HasFlag(default(FlagsEnum));
             Assert.AreEqual(resultEnumUtil, resultOfficial);
         }
@@ -384,65 +382,50 @@ namespace EnumUtilTests
         [TestMethod]
         public void TestEmptyEnum()
         {
-            var values = EnumUtil.GetValues<EmptyEnum>();
+            var values = EnumUtil<EmptyEnum>.GetValues();
             Assert.IsTrue(values.Length == 0);
 
-            var valueDesc = EnumUtil.GetValueDescription<EmptyEnum>();
+            var valueDesc = EnumUtil<EmptyEnum>.GetValueDescription();
             Assert.IsTrue(valueDesc.Count == 0);
 
-            var valueNameDesc = EnumUtil.GetValueNameDescription<EmptyEnum>();
+            var valueNameDesc = EnumUtil<EmptyEnum>.GetValueNameDescription();
             Assert.IsTrue(valueNameDesc.Count == 0);
 
-            var nameValue = EnumUtil.GetNameValue<EmptyEnum>();
+            var nameValue = EnumUtil<EmptyEnum>.GetNameValue();
             Assert.IsTrue(nameValue.Count == 0);
 
-            var names = EnumUtil.GetNames<EmptyEnum>();
+            var names = EnumUtil<EmptyEnum>.GetNames();
             Assert.IsTrue(names.Length == 0);
 
-            var fields = EnumUtil.GetEnumFields<EmptyEnum>();
+            var fields = EnumUtil<EmptyEnum>.GetEnumFields();
             Assert.IsTrue(fields.Length == 0);
 
-            var attributes = EnumUtil.GetAttributes<DescriptionAttribute, EmptyEnum>();
+            var attributes = EnumUtil<EmptyEnum>.GetAttributes<DescriptionAttribute>();
             Assert.IsTrue(attributes.Count() == 0);
 
-            var valueAttribute = EnumUtil.GetValueAttribute<EmptyEnum, DescriptionAttribute>();
+            var valueAttribute = EnumUtil<EmptyEnum>.GetValueAttribute<DescriptionAttribute>();
             Assert.IsTrue(valueAttribute.Count == 0);
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Type provided must be an Enum.")]
-        public void UnsafeImproperGetValues()
-        {
-            NotEnum[] meg = EnumUtilUnsafe<NotEnum>.GetValues<NotEnum>();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(TypeInitializationException), "Type provided must be an Enum.")]
-        public void UnsafeImproperOr()
-        {
-            NotEnum or = EnumUtilUnsafe<NotEnum>.BitwiseOr(new NotEnum(), new NotEnum());
-        }
-
+        
         [TestMethod]
         public void GetValuesEquivalentBehavior()
         {
-            TestEquivalentValues<Enum, ByteEnum>();
-            TestEquivalentValues<Enum, SByteEnum>();
-            TestEquivalentValues<Enum, FlagsEnum>();
-            TestEquivalentValues<Enum, UInt16Enum>();
-            TestEquivalentValues<Enum, Int16Enum>();
-            TestEquivalentValues<Enum, UInt32Enum>();
-            TestEquivalentValues<Enum, Int32Enum>();
-            TestEquivalentValues<Enum, UInt64Enum>();
-            TestEquivalentValues<Enum, Int64Enum>();
+            TestEquivalentValues<ByteEnum>();
+            TestEquivalentValues<SByteEnum>();
+            TestEquivalentValues<FlagsEnum>();
+            TestEquivalentValues<UInt16Enum>();
+            TestEquivalentValues<Int16Enum>();
+            TestEquivalentValues<UInt32Enum>();
+            TestEquivalentValues<Int32Enum>();
+            TestEquivalentValues<UInt64Enum>();
+            TestEquivalentValues<Int64Enum>();
         }
 
-        private void TestEquivalentValues<E, T>()
-            where E : class, IComparable, IFormattable, IConvertible
-            where T : struct, E
+        private void TestEquivalentValues<TEnum>()
+            where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
         {
-            var values = (T[])typeof(T).GetEnumValues();
-            var values2 = EnumUtilBase<E>.GetValues<T>();
+            var values = (TEnum[])typeof(TEnum).GetEnumValues();
+            var values2 = EnumUtil<TEnum>.GetValues();
 
             Assert.IsTrue(values.Length == values2.Length);
 

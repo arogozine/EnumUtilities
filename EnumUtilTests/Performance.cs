@@ -19,7 +19,7 @@ namespace EnumUtilTests
             bool isDefined = true;
 
             i = 0;
-            foreach (int val in EnumUtil.GetValues<Int32Enum>())
+            foreach (int val in EnumUtil<Int32Enum>.GetValues())
             {
                 for (i = 0; i < 200000; i++)
                 {
@@ -41,11 +41,11 @@ namespace EnumUtilTests
             var isDefinedFunc =
 
             i = 0;
-            foreach (byte val in EnumUtil.GetValues<Int32Enum>())
+            foreach (byte val in EnumUtil<Int32Enum>.GetValues())
             {
                 for (i = 0; i < 200000; i++)
                 {
-                    isDefined &= EnumUtil.IsDefined<Int32Enum>(val);
+                    isDefined &= EnumUtil<Int32Enum>.IsDefined(val);
                 }
             }
 
@@ -91,7 +91,7 @@ namespace EnumUtilTests
             bool isDefined = true;
 
             i = 0;
-            foreach (var val in EnumUtil.GetValues<Int32Enum>())
+            foreach (var val in EnumUtil<Int32Enum>.GetValues())
             {
                 for (i = 0; i < 200000; i++)
                 {
@@ -110,11 +110,11 @@ namespace EnumUtilTests
 
             bool isDefined = true;
             i = 0;
-            foreach (var val in EnumUtil.GetValues<Int32Enum>())
+            foreach (var val in EnumUtil<Int32Enum>.GetValues())
             {
                 for (i = 0; i < 200000; i++)
                 {
-                    isDefined &= EnumUtil.IsDefined(val);
+                    isDefined &= EnumUtil<Int32Enum>.IsDefined(val);
                 }
             }
 
@@ -135,7 +135,7 @@ namespace EnumUtilTests
             i = 0;
             for (; i < 2000000; i++)
             {
-                discardMe = EnumUtil.HasFlag(natural, flag);
+                discardMe = EnumUtil<FlagsEnum>.HasFlag(natural, flag);
             }
 
             watch.Stop();
