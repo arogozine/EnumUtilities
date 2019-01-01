@@ -9,27 +9,27 @@ namespace EnumUtilities
     /// 
     /// (c) Alexandre Rogozine 2016
     /// </summary>
-    /// <typeparam name="T">Enum Type</typeparam>
-    internal static class EnumCompiledCache<T>
-        where T : struct, IComparable, IFormattable, IConvertible
+    /// <typeparam name="TEnum">Enum Type</typeparam>
+    internal static class EnumCompiledCache<TEnum>
+        where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
     {
         #region Generate Functions
 
-        private static Func<T, Y> GenerateConvertTo<Y>() 
+        private static Func<TEnum, Y> GenerateConvertTo<Y>() 
             where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
         {
-            var value = Expression.Parameter(typeof(T));
+            var value = Expression.Parameter(typeof(TEnum));
             UnaryExpression ue = Expression.Convert(value, typeof(Y));
-            return Expression.Lambda<Func<T, Y>>(ue, value)
+            return Expression.Lambda<Func<TEnum, Y>>(ue, value)
                 .Compile();
         }
 
-        private static Func<Y, T> GenerateConvertFrom<Y>()
+        private static Func<Y, TEnum> GenerateConvertFrom<Y>()
             where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
         {
             var value = Expression.Parameter(typeof(Y));
-            UnaryExpression ue = Expression.Convert(value, typeof(T));
-            return Expression.Lambda<Func<Y, T>>(ue, value)
+            UnaryExpression ue = Expression.Convert(value, typeof(TEnum));
+            return Expression.Lambda<Func<Y, TEnum>>(ue, value)
                 .Compile();
         }
 
@@ -37,24 +37,24 @@ namespace EnumUtilities
             where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
         {
             var value = Expression.Parameter(typeof(Y), "value");
-            var convVal = Expression.Convert(value, typeof(T));
+            var convVal = Expression.Convert(value, typeof(TEnum));
 
-            Expression<Func<T, bool>> lookup =
-                val => Array.IndexOf(ReflectionCache<T>.FieldValues, val) >= 0;
+            Expression<Func<TEnum, bool>> lookup =
+                val => Array.IndexOf(ReflectionCache<TEnum>.FieldValues, val) >= 0;
 
             return Expression.Lambda<Func<Y, bool>>(Expression.Invoke(lookup, convVal), value)
                 .Compile();
         }
 
-        private static Func<T, T, bool> GenerateHasFlag()
+        private static Func<TEnum, TEnum, bool> GenerateHasFlag()
         {
-            var value = Expression.Parameter(typeof(T));
-            var flag = Expression.Parameter(typeof(T));
+            var value = Expression.Parameter(typeof(TEnum));
+            var flag = Expression.Parameter(typeof(TEnum));
 
             // Convert from Enum to underlying type (byte, int, long, ...)
             // to allow bitwise functions to work
-            UnaryExpression valueConverted = Expression.Convert(value, Enum.GetUnderlyingType(typeof(T)));
-            UnaryExpression flagConverted = Expression.Convert(flag, Enum.GetUnderlyingType(typeof(T)));
+            UnaryExpression valueConverted = Expression.Convert(value, Enum.GetUnderlyingType(typeof(TEnum)));
+            UnaryExpression flagConverted = Expression.Convert(flag, Enum.GetUnderlyingType(typeof(TEnum)));
 
             // (Value & Flag)
             BinaryExpression bitwiseAnd =
@@ -67,19 +67,19 @@ namespace EnumUtilities
             BinaryExpression hasFlagExpression =
                 Expression.MakeBinary(ExpressionType.Equal, bitwiseAnd, flagConverted);
 
-            return Expression.Lambda<Func<T, T, bool>>(hasFlagExpression, value, flag)
+            return Expression.Lambda<Func<TEnum, TEnum, bool>>(hasFlagExpression, value, flag)
                 .Compile();
         }
 
-        private static Func<T, T, T> BitwiseOperator(ExpressionType expressionType)
+        private static Func<TEnum, TEnum, TEnum> BitwiseOperator(ExpressionType expressionType)
         {
-            ParameterExpression leftVal = Expression.Parameter(typeof(T));
-            ParameterExpression rightVal = Expression.Parameter(typeof(T));
+            ParameterExpression leftVal = Expression.Parameter(typeof(TEnum));
+            ParameterExpression rightVal = Expression.Parameter(typeof(TEnum));
 
             // Convert from Enum to Enum's underlying type (byte, int, long, ...)
             // to allow bitwise functions to work
-            UnaryExpression leftValConverted = Expression.Convert(leftVal, Enum.GetUnderlyingType(typeof(T)));
-            UnaryExpression rightValConverted = Expression.Convert(rightVal, Enum.GetUnderlyingType(typeof(T)));
+            UnaryExpression leftValConverted = Expression.Convert(leftVal, Enum.GetUnderlyingType(typeof(TEnum)));
+            UnaryExpression rightValConverted = Expression.Convert(rightVal, Enum.GetUnderlyingType(typeof(TEnum)));
 
             // left [expressionType] right
             BinaryExpression binaryExpression =
@@ -89,18 +89,18 @@ namespace EnumUtilities
                     rightValConverted);
 
             // Convert back to Enum
-            UnaryExpression backToEnumType = Expression.Convert(binaryExpression, typeof(T));
-            return Expression.Lambda<Func<T, T, T>>(backToEnumType, leftVal, rightVal)
+            UnaryExpression backToEnumType = Expression.Convert(binaryExpression, typeof(TEnum));
+            return Expression.Lambda<Func<TEnum, TEnum, TEnum>>(backToEnumType, leftVal, rightVal)
                 .Compile();
         }
 
-        private static Func<T, T> BitwiseUnaryOperator(ExpressionType expressionType)
+        private static Func<TEnum, TEnum> BitwiseUnaryOperator(ExpressionType expressionType)
         {
-            var val = Expression.Parameter(typeof(T));
+            var val = Expression.Parameter(typeof(TEnum));
 
             // Convert from Enum to Enum’s underlying type (byte, int, long, …)
             // to allow bitwise functions to work
-            var valConverted = Expression.Convert(val, Enum.GetUnderlyingType(typeof(T)));
+            var valConverted = Expression.Convert(val, Enum.GetUnderlyingType(typeof(TEnum)));
 
             var unaryExpression =
                 Expression.MakeUnary(
@@ -109,19 +109,19 @@ namespace EnumUtilities
                     null);
 
             // Convert back to Enum
-            var backToEnumType = Expression.Convert(unaryExpression, typeof(T));
-            return Expression.Lambda<Func<T, T>>(backToEnumType, val)
+            var backToEnumType = Expression.Convert(unaryExpression, typeof(TEnum));
+            return Expression.Lambda<Func<TEnum, TEnum>>(backToEnumType, val)
                 .Compile();
         }
 
-        private static Func<T, T, T> GenerateUnsetFlag()
+        private static Func<TEnum, TEnum, TEnum> GenerateUnsetFlag()
         {
-            var val = Expression.Parameter(typeof(T));
-            var flag = Expression.Parameter(typeof(T));
+            var val = Expression.Parameter(typeof(TEnum));
+            var flag = Expression.Parameter(typeof(TEnum));
 
             // Convert from Enum to Enum’s underlying type (byte, int, long, …)
             // to allow bitwise functions to work
-            var underlyingType = Enum.GetUnderlyingType(typeof(T));
+            var underlyingType = Enum.GetUnderlyingType(typeof(TEnum));
             var valConverted = Expression.Convert(val, underlyingType);
             var flagConverted = Expression.Convert(flag, underlyingType);
 
@@ -139,27 +139,27 @@ namespace EnumUtilities
                 notFlagExpression);
 
             // Convert back to Enum
-            UnaryExpression backToEnumType = Expression.Convert(andExpression, typeof(T));
-            return Expression.Lambda<Func<T, T, T>>(backToEnumType, val, flag)
+            UnaryExpression backToEnumType = Expression.Convert(andExpression, typeof(TEnum));
+            return Expression.Lambda<Func<TEnum, TEnum, TEnum>>(backToEnumType, val, flag)
                 .Compile();
         }
 
-        private static Func<T, T, T> GenerateBitwiseOr()
+        private static Func<TEnum, TEnum, TEnum> GenerateBitwiseOr()
         {
             return BitwiseOperator(ExpressionType.Or);
         }
 
-        private static Func<T, T, T> GenerateBitwiseAnd()
+        private static Func<TEnum, TEnum, TEnum> GenerateBitwiseAnd()
         {
             return BitwiseOperator(ExpressionType.And);
         }
 
-        private static Func<T, T, T> GenerateBitwiseExclusiveOr()
+        private static Func<TEnum, TEnum, TEnum> GenerateBitwiseExclusiveOr()
         {
             return BitwiseOperator(ExpressionType.ExclusiveOr);
         }
 
-        private static Func<T, T> GenerateBitwiseNot()
+        private static Func<TEnum, TEnum> GenerateBitwiseNot()
             => BitwiseUnaryOperator(ExpressionType.Not);
 
         #endregion
@@ -190,65 +190,65 @@ namespace EnumUtilities
 
         #region Bitwise
 
-        internal static readonly Func<T, T, T> UnsetFlag = GenerateUnsetFlag();
+        internal static readonly Func<TEnum, TEnum, TEnum> UnsetFlag = GenerateUnsetFlag();
 
-        internal static readonly Func<T, T, T> BitwiseOr = GenerateBitwiseOr();
+        internal static readonly Func<TEnum, TEnum, TEnum> BitwiseOr = GenerateBitwiseOr();
 
-        internal static readonly Func<T, T, T> BitwiseAnd = GenerateBitwiseAnd();
+        internal static readonly Func<TEnum, TEnum, TEnum> BitwiseAnd = GenerateBitwiseAnd();
 
-        internal static readonly Func<T, T, T> BitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
+        internal static readonly Func<TEnum, TEnum, TEnum> BitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
 
-        internal static readonly Func<T, T> BitwiseNot = GenerateBitwiseNot();
+        internal static readonly Func<TEnum, TEnum> BitwiseNot = GenerateBitwiseNot();
 
-        internal static readonly Func<T, T, bool> HasFlag = GenerateHasFlag();
+        internal static readonly Func<TEnum, TEnum, bool> HasFlag = GenerateHasFlag();
 
         #endregion
 
         #region To
 
-        internal static readonly Func<T, ulong> ToUInt64 = GenerateConvertTo<ulong>();
+        internal static readonly Func<TEnum, ulong> ToUInt64 = GenerateConvertTo<ulong>();
 
-        internal static readonly Func<T, long> ToInt64 = GenerateConvertTo<long>();
+        internal static readonly Func<TEnum, long> ToInt64 = GenerateConvertTo<long>();
 
-        internal static readonly Func<T, uint> ToUInt32 = GenerateConvertTo<uint>();
+        internal static readonly Func<TEnum, uint> ToUInt32 = GenerateConvertTo<uint>();
 
-        internal static readonly Func<T, int> ToInt32 = GenerateConvertTo<int>();
+        internal static readonly Func<TEnum, int> ToInt32 = GenerateConvertTo<int>();
 
-        internal static readonly Func<T, ushort> ToUInt16 = GenerateConvertTo<ushort>();
+        internal static readonly Func<TEnum, ushort> ToUInt16 = GenerateConvertTo<ushort>();
 
-        internal static readonly Func<T, short> ToInt16 = GenerateConvertTo<short>();
+        internal static readonly Func<TEnum, short> ToInt16 = GenerateConvertTo<short>();
 
-        internal static readonly Func<T, byte> ToByte = GenerateConvertTo<byte>();
+        internal static readonly Func<TEnum, byte> ToByte = GenerateConvertTo<byte>();
 
-        internal static readonly Func<T, sbyte> ToSByte = GenerateConvertTo<sbyte>();
+        internal static readonly Func<TEnum, sbyte> ToSByte = GenerateConvertTo<sbyte>();
 
-        internal static readonly Func<T, float> ToSingle = GenerateConvertTo<float>();
+        internal static readonly Func<TEnum, float> ToSingle = GenerateConvertTo<float>();
 
-        internal static readonly Func<T, double> ToDouble = GenerateConvertTo<double>();
+        internal static readonly Func<TEnum, double> ToDouble = GenerateConvertTo<double>();
 
         #endregion
 
         #region From
 
-        internal static readonly Func<ulong, T> FromUInt64 = GenerateConvertFrom<ulong>();
+        internal static readonly Func<ulong, TEnum> FromUInt64 = GenerateConvertFrom<ulong>();
 
-        internal static readonly Func<long, T> FromInt64 = GenerateConvertFrom<long>();
+        internal static readonly Func<long, TEnum> FromInt64 = GenerateConvertFrom<long>();
 
-        internal static readonly Func<uint, T> FromUInt32 = GenerateConvertFrom<uint>();
+        internal static readonly Func<uint, TEnum> FromUInt32 = GenerateConvertFrom<uint>();
 
-        internal static readonly Func<int, T> FromInt32 = GenerateConvertFrom<int>();
+        internal static readonly Func<int, TEnum> FromInt32 = GenerateConvertFrom<int>();
 
-        internal static readonly Func<ushort, T> FromUInt16 = GenerateConvertFrom<ushort>();
+        internal static readonly Func<ushort, TEnum> FromUInt16 = GenerateConvertFrom<ushort>();
 
-        internal static readonly Func<short, T> FromInt16 = GenerateConvertFrom<short>();
+        internal static readonly Func<short, TEnum> FromInt16 = GenerateConvertFrom<short>();
 
-        internal static readonly Func<byte, T> FromByte = GenerateConvertFrom<byte>();
+        internal static readonly Func<byte, TEnum> FromByte = GenerateConvertFrom<byte>();
 
-        internal static readonly Func<sbyte, T> FromSByte = GenerateConvertFrom<sbyte>();
+        internal static readonly Func<sbyte, TEnum> FromSByte = GenerateConvertFrom<sbyte>();
 
-        internal static readonly Func<float, T> FromSingle = GenerateConvertFrom<float>();
+        internal static readonly Func<float, TEnum> FromSingle = GenerateConvertFrom<float>();
 
-        internal static readonly Func<double, T> FromDouble = GenerateConvertFrom<double>();
+        internal static readonly Func<double, TEnum> FromDouble = GenerateConvertFrom<double>();
 
         #endregion
     }

@@ -12,84 +12,75 @@ namespace EnumUtilities
     /// Provides type safe Enum extension methods
     /// by "bypassing" .NET restrictions.
     /// </summary>
-    public class EnumUtil<E>
-        where E : struct, Enum, IComparable, IFormattable, IConvertible
+    public static class EnumUtil<TEnum>
+        where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
     {
-        private EnumUtil() { }
-
         #region Wrapped Functions
 
         /// <summary>
         /// Returns the underlying type of the specified enumeration.        
         /// Wrapper for <seealso cref="Enum.GetUnderlyingType(Type)"/>
         /// </summary>
-        /// <typeparam name="T">The enumeration whose underlying type will be retrieved.</typeparam>
         /// <returns>The underlying type of T.</returns>
         public static Type GetUnderlyingType()
-            => Enum.GetUnderlyingType(typeof(E));
+            => Enum.GetUnderlyingType(typeof(TEnum));
 
         /// <summary>
         /// Returns the Name of a certain Enum Value.
         /// Wrapper for <seealso cref="Enum.GetName(Type, object)"/>
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>Name of the enum value</returns>
-        public static string GetName(E value)
-            => Enum.GetName(typeof(E), value);
+        public static string GetName(TEnum value)
+            => Enum.GetName(typeof(TEnum), value);
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// Wrapper for <seealso cref="Enum.Parse(Type, string)"/>
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">A string containing the name or value to convert.</param>
         /// <returns>An object of type T whose value is represented by value.</returns>
-        public static E Parse(string value)
-            => (E)Enum.Parse(typeof(E), value);
+        public static TEnum Parse(string value)
+            => (TEnum)Enum.Parse(typeof(TEnum), value);
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter specifies whether the operation is case-insensitive.
         /// Wrapper for <seealso cref="Enum.Parse(Type, string, bool)"/>
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">A string containing the name or value to convert.</param>
         /// <param name="ignoreCase">true to ignore case; false to regard case.</param>
         /// <returns>An object of type T whose value is represented by value.</returns>
-        public static E Parse(string value, bool ignoreCase)
-            => (E)Enum.Parse(typeof(E), value, ignoreCase);
+        public static TEnum Parse(string value, bool ignoreCase)
+            => (TEnum)Enum.Parse(typeof(TEnum), value, ignoreCase);
 
         /// <summary>
         /// Retrieves an array of the values of the constants in a specified enumeration.        
         /// Wrapper for <seealso cref="Enum.GetValues(Type)"/>
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>An array that contains the values of the constants in T.</returns>
-        public static E[] GetValues()
-            => (E[])typeof(E).GetEnumValues();
+        public static TEnum[] GetValues()
+            => (TEnum[])typeof(TEnum).GetEnumValues();
 
         /// <summary>
         /// Retrieves an array of the names of the constants in a specified enumeration.        
         /// Wrapper for <seealso cref="Enum.GetNames(Type)"/>
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>A string array of the names of the constants in T.</returns>
         public static string[] GetNames()
-            => typeof(E).GetEnumNames();
+            => typeof(TEnum).GetEnumNames();
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// Wrapper for <seealso cref="Enum.TryParse{TEnum}(string, out TEnum)"/>
         /// </summary>
-        /// <typeparam name="T">The enumeration type to which to converE value.</typeparam>
         /// <param name="value">
         /// The string representation of the enumeration name or underlying value to convert.
         /// </param>
-        /// <param name="result">Contains an object of type <c>T</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+        /// <param name="result">Contains an object of type <c>E</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
         /// <returns>
         /// true if the value parameter was converted successfully; otherwise, false.
         /// </returns>
-        public static bool TryParse(string value, out E result)
+        public static bool TryParse(string value, out TEnum result)
             => Enum.TryParse(value, out result);
 
         /// <summary>
@@ -100,9 +91,9 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
         /// <param name="ignoreCase">true to ignore case; false to consider case.</param>
-        /// <param name="result">Contains an object of type <c>T</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+        /// <param name="result">Contains an object of type <c>E</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-        public static bool TryParse(string value, bool ignoreCase, out E result)
+        public static bool TryParse(string value, bool ignoreCase, out TEnum result)
             => Enum.TryParse(value, ignoreCase, out result);
 
         #endregion
@@ -115,37 +106,34 @@ namespace EnumUtilities
         /// <param name="left">An enumeration value</param>
         /// <param name="right">An enumeration value</param>
         /// <returns><c>left | right</c></returns>
-        public static E BitwiseOr(E left, E right)
-            => EnumCompiledCache<E>.BitwiseOr(left, right);
+        public static TEnum BitwiseOr(TEnum left, TEnum right)
+            => EnumCompiledCache<TEnum>.BitwiseOr(left, right);
 
         /// <summary>
         /// Bitwise AND
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="left">An enumeration value</param>
         /// <param name="right">An enumeration value</param>
         /// <returns><c>left &amp; right</c></returns>
-        public static E BitwiseAnd(E left, E right)
-            => EnumCompiledCache<E>.BitwiseAnd(left, right);
+        public static TEnum BitwiseAnd(TEnum left, TEnum right)
+            => EnumCompiledCache<TEnum>.BitwiseAnd(left, right);
 
         /// <summary>
         /// Bitwise Exclusive OR
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="left">An enumeration value</param>
         /// <param name="right">An enumeration value</param>
         /// <returns><c>left ^ right</c></returns>
-        public static E BitwiseExclusiveOr(E left, E right)
-            => EnumCompiledCache<E>.BitwiseExclusiveOr(left, right);
+        public static TEnum BitwiseExclusiveOr(TEnum left, TEnum right)
+            => EnumCompiledCache<TEnum>.BitwiseExclusiveOr(left, right);
 
         /// <summary>
         /// Bitwise NOT
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns><c>~value</c></returns>
-        public static E BitwiseNot(E value)
-            => EnumCompiledCache<E>.BitwiseNot(value);
+        public static TEnum BitwiseNot(TEnum value)
+            => EnumCompiledCache<TEnum>.BitwiseNot(value);
 
         /// <summary>
         /// Checks whether a flag exists.
@@ -156,8 +144,8 @@ namespace EnumUtilities
         /// <returns>
         /// true if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, false.
         /// </returns>
-        public static bool HasFlag(E value, E flag)
-            => EnumCompiledCache<E>.HasFlag(value, flag);
+        public static bool HasFlag(TEnum value, TEnum flag)
+            => EnumCompiledCache<TEnum>.HasFlag(value, flag);
 
         /// <summary>
         /// Returns the result of bitwise or between the passed in value and flag.
@@ -165,7 +153,7 @@ namespace EnumUtilities
         /// <param name="value">An enumeration value</param>
         /// <param name="flag">An enumeration value</param>
         /// <returns>Value with the specified flag set</returns>
-        public static E SetFlag(E value, E flag)
+        public static TEnum SetFlag(TEnum value, TEnum flag)
             => BitwiseOr(value, flag);
 
         /// <summary>
@@ -174,8 +162,8 @@ namespace EnumUtilities
         /// <param name="value">An enumeration value</param>
         /// <param name="flag">An enumeration value</param>
         /// <returns>Value with the specified flag unset</returns>
-        public static E UnsetFlag(E value, E flag)
-            => EnumCompiledCache<E>.UnsetFlag(value, flag);
+        public static TEnum UnsetFlag(TEnum value, TEnum flag)
+            => EnumCompiledCache<TEnum>.UnsetFlag(value, flag);
 
         /// <summary>
         /// Returns the result of bitwise exclusive or for the value and the flag.
@@ -183,7 +171,7 @@ namespace EnumUtilities
         /// <param name="value">An enumeration value</param>
         /// <param name="flag">An enumeration value</param>
         /// <returns>Value with the specified flag toggled</returns>
-        public static E ToggleFlag(E value, E flag)
+        public static TEnum ToggleFlag(TEnum value, TEnum flag)
             => BitwiseExclusiveOr(value, flag);
 
         /// <summary>
@@ -193,8 +181,8 @@ namespace EnumUtilities
         /// <param name="flag">An enumeration value</param>
         /// <param name="flagSet">true to set and false to unset</param>
         /// <returns>Value with the specified flag toggled</returns>
-        public static E ToggleFlag(E value, E flag, bool flagSet)
-            => (flagSet ? (Func<E, E, E>)SetFlag : UnsetFlag)(value, flag);
+        public static TEnum ToggleFlag(TEnum value, TEnum flag, bool flagSet)
+            => (flagSet ? (Func<TEnum, TEnum, TEnum>)SetFlag : UnsetFlag)(value, flag);
 
         #endregion
 
@@ -205,15 +193,15 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        /// true if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        /// true if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         /// <remarks>
         ///   <para>
         ///     For the sake of providing a typesafe API alternative to <c>Enum.IsDefined(typeof(E), value)</c>.
         ///   </para>
         /// </remarks>
-        public static bool IsDefined(E value)
-            => Array.IndexOf(ReflectionCache<E>.FieldValues, value) >= 0;
+        public static bool IsDefined(TEnum value)
+            => Array.IndexOf(ReflectionCache<TEnum>.FieldValues, value) >= 0;
 
         /// <summary>
         /// Returns an indication whether a constant with a specified name exists in a specified
@@ -221,13 +209,13 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="name">An enumeration value</param>
         /// <returns>
-        /// <c>true</c> if <paramref name="name"/> is valid for <typeparamref name="E"/>.
+        /// <c>true</c> if <paramref name="name"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="name"/> is null
         /// </exception>
         public static bool IsDefined(string name)
-            => Enum.IsDefined(typeof(E), name);
+            => Enum.IsDefined(typeof(TEnum), name);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -235,10 +223,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(sbyte value)
-            => EnumCompiledCache<E>.IsDefinedSByte(value);
+            => EnumCompiledCache<TEnum>.IsDefinedSByte(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -246,10 +234,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(byte value)
-            => EnumCompiledCache<E>.IsDefinedByte(value);
+            => EnumCompiledCache<TEnum>.IsDefinedByte(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -257,10 +245,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(ushort value)
-            => EnumCompiledCache<E>.IsDefinedUInt16(value);
+            => EnumCompiledCache<TEnum>.IsDefinedUInt16(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -268,10 +256,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(short value)
-            => EnumCompiledCache<E>.IsDefinedInt16(value);
+            => EnumCompiledCache<TEnum>.IsDefinedInt16(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -279,10 +267,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(int value)
-            => EnumCompiledCache<E>.IsDefinedInt32(value);
+            => EnumCompiledCache<TEnum>.IsDefinedInt32(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -290,10 +278,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(uint value)
-            => EnumCompiledCache<E>.IsDefinedUInt32(value);
+            => EnumCompiledCache<TEnum>.IsDefinedUInt32(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -301,10 +289,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(long value)
-            => EnumCompiledCache<E>.IsDefinedInt64(value);
+            => EnumCompiledCache<TEnum>.IsDefinedInt64(value);
 
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified
@@ -312,10 +300,10 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(ulong value)
-            => EnumCompiledCache<E>.IsDefinedUInt64(value);
+            => EnumCompiledCache<TEnum>.IsDefinedUInt64(value);
 
         /// <summary>
         /// Returns an idication whether a constant with a specified value exists in a specified
@@ -323,115 +311,105 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="E"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(float value)
-            => EnumCompiledCache<E>.IsDefinedSingle(value);
+            => EnumCompiledCache<TEnum>.IsDefinedSingle(value);
 
         /// <summary>
         /// Returns an idication whether a constant with a specified value exists in a specified
         /// enumeration
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="T"/>.
+        ///     <c>true</c> if <paramref name="value"/> is valid for <typeparamref name="TEnum"/>.
         /// </returns>
         public static bool IsDefined(double value)
-            => EnumCompiledCache<E>.IsDefinedDouble(value);
+            => EnumCompiledCache<TEnum>.IsDefinedDouble(value);
 
         #endregion
 
         #region From Numeric Type
 
         /// <summary>
-        /// Converts a byte to a specified enumeration <typeparamref name="E"/>
+        /// Converts a byte to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromByte(byte value)
-            => EnumCompiledCache<E>.FromByte(value);
+        public static TEnum FromByte(byte value)
+            => EnumCompiledCache<TEnum>.FromByte(value);
 
         /// <summary>
-        /// Converts a sbyte to a specified enumeration <typeparamref name="E"/>
+        /// Converts a sbyte to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromSByte(sbyte value)
-            => EnumCompiledCache<E>.FromSByte(value);
+        public static TEnum FromSByte(sbyte value)
+            => EnumCompiledCache<TEnum>.FromSByte(value);
 
         /// <summary>
-        /// Converts a short to a specified enumeration <typeparamref name="T"/>
+        /// Converts a short to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromInt16(short value)
-            => EnumCompiledCache<E>.FromInt16(value);
+        public static TEnum FromInt16(short value)
+            => EnumCompiledCache<TEnum>.FromInt16(value);
 
         /// <summary>
-        /// Converts a ushort to a specified enumeration <typeparamref name="T"/>
+        /// Converts a ushort to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromUInt16(ushort value)
-            => EnumCompiledCache<E>.FromUInt16(value);
+        public static TEnum FromUInt16(ushort value)
+            => EnumCompiledCache<TEnum>.FromUInt16(value);
 
         /// <summary>
-        /// Converts an int to a specified enumeration <typeparamref name="T"/>
+        /// Converts an int to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromInt32(int value)
-            => EnumCompiledCache<E>.FromInt32(value);
+        public static TEnum FromInt32(int value)
+            => EnumCompiledCache<TEnum>.FromInt32(value);
 
         /// <summary>
-        /// Converts a uint to a specified enumeration <typeparamref name="T"/>
+        /// Converts a uint to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromUInt32(uint value)
-            => EnumCompiledCache<E>.FromUInt32(value);
+        public static TEnum FromUInt32(uint value)
+            => EnumCompiledCache<TEnum>.FromUInt32(value);
 
         /// <summary>
-        /// Converts a long to a specified enumeration <typeparamref name="T"/>
+        /// Converts a long to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromInt64(long value)
-            => EnumCompiledCache<E>.FromInt64(value);
+        public static TEnum FromInt64(long value)
+            => EnumCompiledCache<TEnum>.FromInt64(value);
 
         /// <summary>
-        /// Converts a ulong to a specified enumeration <typeparamref name="T"/>
+        /// Converts a ulong to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromUInt64(ulong value)
-            => EnumCompiledCache<E>.FromUInt64(value);
+        public static TEnum FromUInt64(ulong value)
+            => EnumCompiledCache<TEnum>.FromUInt64(value);
 
         /// <summary>
-        /// Converts a float to a specified enumeration <typeparamref name="T"/>
+        /// Converts a float to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromSingle(float value)
-            => EnumCompiledCache<E>.FromSingle(value);
+        public static TEnum FromSingle(float value)
+            => EnumCompiledCache<TEnum>.FromSingle(value);
 
         /// <summary>
-        /// Converts a double to a specified enumeration <typeparamref name="T"/>
+        /// Converts a double to a specified enumeration <typeparamref name="TEnum"/>
         /// </summary>
-        /// <typeparam name="T">Enumeration Type</typeparam>
         /// <param name="value">value to convert</param>
         /// <returns><paramref name="value"/> as the enumeration type</returns>
-        public static E FromDouble(double value)
-            => EnumCompiledCache<E>.FromDouble(value);
+        public static TEnum FromDouble(double value)
+            => EnumCompiledCache<TEnum>.FromDouble(value);
 
         #endregion
 
@@ -442,89 +420,80 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">An enumeration value</param>
         /// <returns>An 8-bit signed integer that is equivalent to the enumeration value</returns>
-        public static byte ToByte(E value)
-            => EnumCompiledCache<E>.ToByte(value);
+        public static byte ToByte(TEnum value)
+            => EnumCompiledCache<TEnum>.ToByte(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to a signed byte.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>An 8-bit unsigned integer that is cast equivalent to the enumeration value</returns>
-        public static sbyte ToSByte(E value)
-            => EnumCompiledCache<E>.ToSByte(value);
+        public static sbyte ToSByte(TEnum value)
+            => EnumCompiledCache<TEnum>.ToSByte(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to a short.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A 16-bit signed integer that is cast equivalent to the enumeration value</returns>
-        public static short ToInt16(E value)
-            => EnumCompiledCache<E>.ToInt16(value);
+        public static short ToInt16(TEnum value)
+            => EnumCompiledCache<TEnum>.ToInt16(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to an unsigned short.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A 16-bit unsigned integer that is cast equivalent to the enumeration value</returns>
-        public static ushort ToUInt16(E value)
-            => EnumCompiledCache<E>.ToUInt16(value);
+        public static ushort ToUInt16(TEnum value)
+            => EnumCompiledCache<TEnum>.ToUInt16(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to an int.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A 32-bit signed integer that is cast equivalent to the enumeration value</returns>
-        public static int ToInt32(E value)
-            => EnumCompiledCache<E>.ToInt32(value);
+        public static int ToInt32(TEnum value)
+            => EnumCompiledCache<TEnum>.ToInt32(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to an unsigned int.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A 32-bit unsigned integer that is cast equivalent to the enumeration value</returns>
-        public static uint ToUInt32(E value)
-            => EnumCompiledCache<E>.ToUInt32(value);
+        public static uint ToUInt32(TEnum value)
+            => EnumCompiledCache<TEnum>.ToUInt32(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to a long.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A 64-bit signed integer that is cast equivalent to the enumeration value</returns>
-        public static long ToInt64(E value)
-            => EnumCompiledCache<E>.ToInt64(value);
+        public static long ToInt64(TEnum value)
+            => EnumCompiledCache<TEnum>.ToInt64(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to an unsigned long.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A 64-bit unsigned integer that is cast equivalent to the enumeration value</returns>
-        public static ulong ToUInt64(E value)
-            => EnumCompiledCache<E>.ToUInt64(value);
+        public static ulong ToUInt64(TEnum value)
+            => EnumCompiledCache<TEnum>.ToUInt64(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to a float.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A single precision floating point number that is case equivalent to the enumeration value</returns>
-        public static float ToSingle(E value)
-            => EnumCompiledCache<E>.ToSingle(value);
+        public static float ToSingle(TEnum value)
+            => EnumCompiledCache<TEnum>.ToSingle(value);
 
         /// <summary>
         /// Converts the value of the specified enumeration to a double.
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <param name="value">An enumeration value</param>
         /// <returns>A double precision floating point number that is case equivalent to the enumeration value</returns>
-        public static double ToDouble(E value)
-            => EnumCompiledCache<E>.ToDouble(value);
+        public static double ToDouble(TEnum value)
+            => EnumCompiledCache<TEnum>.ToDouble(value);
 
         #endregion
 
@@ -534,12 +503,11 @@ namespace EnumUtilities
         /// Retrieves a specific attribute on the enumeration type
         /// </summary>
         /// <typeparam name="Y">Attribute to Retrieve</typeparam>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>Custom Attribute on the Enum</returns>
         public static Y GetAttribute<Y>()           
             where Y : Attribute
         {
-            return typeof(E).GetCustomAttribute<Y>();
+            return typeof(TEnum).GetCustomAttribute<Y>();
         }
 
         /// <summary>
@@ -550,7 +518,7 @@ namespace EnumUtilities
         public static IEnumerable<Y> GetAttributes<Y>()
             where Y : Attribute
         {
-            return typeof(E).GetCustomAttributes<Y>();
+            return typeof(TEnum).GetCustomAttributes<Y>();
         }
 
         /// <summary>
@@ -559,12 +527,12 @@ namespace EnumUtilities
         /// <typeparam name="Y">Attribute Type</typeparam>
         /// <param name="value">Enum Value with the Attribute</param>
         /// <returns>Attribute Y on the enum value</returns>
-        public static Y GetAttribute<Y>(E value)
+        public static Y GetAttribute<Y>(TEnum value)
            
             where Y : Attribute
         {
-            FieldInfo field = typeof(E)
-                .GetField(Enum.GetName(typeof(E), value), BindingFlags.Public | BindingFlags.Static);
+            FieldInfo field = typeof(TEnum)
+                .GetField(Enum.GetName(typeof(TEnum), value), BindingFlags.Public | BindingFlags.Static);
 
             return field.GetCustomAttribute<Y>();
         }
@@ -575,12 +543,12 @@ namespace EnumUtilities
         /// <typeparam name="Y">Attribute Type</typeparam>
         /// <param name="value">Enum Value with Attributes</param>
         /// <returns>Attributes on the enum value</returns>
-        public static IEnumerable<Y> GetAttributes<Y>(E value)
+        public static IEnumerable<Y> GetAttributes<Y>(TEnum value)
            
             where Y : Attribute
         {
-            FieldInfo field = typeof(E)
-                .GetField(Enum.GetName(typeof(E), value), BindingFlags.Public | BindingFlags.Static);
+            FieldInfo field = typeof(TEnum)
+                .GetField(Enum.GetName(typeof(TEnum), value), BindingFlags.Public | BindingFlags.Static);
 
             return field.GetCustomAttributes<Y>();
         }
@@ -589,13 +557,12 @@ namespace EnumUtilities
         /// Tells whether the Enum has a specific attribute.
         /// </summary>
         /// <typeparam name="Y">An enumeration type</typeparam>
-        /// <typeparam name="T">Attribute Type</typeparam>
         /// <returns>Whether or not the enum has a certain attribute</returns>
         public static bool HasAttribute<Y>()
            
             where Y : Attribute
         {
-            return typeof(E).IsDefined(typeof(Y), false);
+            return typeof(TEnum).IsDefined(typeof(Y), false);
         }
 
         /// <summary>
@@ -603,7 +570,7 @@ namespace EnumUtilities
         /// </summary>
         /// <returns>Whether or not the Enum has FlagsAttribute</returns>
         public static bool HasFlagsAttribute()
-            => typeof(E).IsDefined(typeof(FlagsAttribute), false);
+            => typeof(TEnum).IsDefined(typeof(FlagsAttribute), false);
 
 
         /// <summary>
@@ -611,14 +578,14 @@ namespace EnumUtilities
         /// </summary>
         /// <returns>FieldInfo Array for the defined values in the Enumeration</returns>
         public static FieldInfo[] GetEnumFields()
-            => ReflectionCache<E>.Fields;
+            => ReflectionCache<TEnum>.Fields;
 
         /// <summary>
         /// Generates a Dictionary of enumeration value to DescriptionAttribute.
         /// <seealso cref="DescriptionAttribute"/>
         /// </summary>
         /// <returns>Map of enumeration value to its description</returns>
-        public static IReadOnlyDictionary<E, DescriptionAttribute> GetValueDescription()           
+        public static IReadOnlyDictionary<TEnum, DescriptionAttribute> GetValueDescription()           
         {
             return GetValueAttribute<DescriptionAttribute>();
         }
@@ -628,7 +595,7 @@ namespace EnumUtilities
         /// <seealso cref="DescriptionAttribute"/>
         /// </summary>
         /// <returns>Map of enumeration value to name and description</returns>
-        public static IReadOnlyDictionary<E, NameAttribute<DescriptionAttribute>> GetValueNameDescription()
+        public static IReadOnlyDictionary<TEnum, NameAttribute<DescriptionAttribute>> GetValueNameDescription()
         {
             return GetValueNameAttribute<DescriptionAttribute>();
         }
@@ -637,16 +604,16 @@ namespace EnumUtilities
         /// Generates a Dictionary of enum value to enum name and attributes
         /// </summary>
         /// <returns>Map of value to name and attributes</returns>
-        public static IReadOnlyDictionary<E, Tuple<string, IEnumerable<Attribute>>> GetValueNameAttributes()           
+        public static IReadOnlyDictionary<TEnum, Tuple<string, IEnumerable<Attribute>>> GetValueNameAttributes()           
         {
-            FieldInfo[] fields = ReflectionCache<E>.Fields;
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
 
-            var dict = new Dictionary<E, Tuple<string, IEnumerable<Attribute>>>(fields.Length);
+            var dict = new Dictionary<TEnum, Tuple<string, IEnumerable<Attribute>>>(fields.Length);
 
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                dict[(E)field.GetRawConstantValue()] = Tuple.Create(field.Name, field.GetCustomAttributes());
+                dict[(TEnum)field.GetRawConstantValue()] = Tuple.Create(field.Name, field.GetCustomAttributes());
             }
 
             return dict;
@@ -657,17 +624,17 @@ namespace EnumUtilities
         /// </summary>
         /// <typeparam name="Y">The type of attribute</typeparam>
         /// <returns>Map of name to value and attribute</returns>
-        public static IReadOnlyDictionary<string, ValueAttribute<E, Y>> GetNameValueAttribute<Y>()           
+        public static IReadOnlyDictionary<string, ValueAttribute<TEnum, Y>> GetNameValueAttribute<Y>()           
             where Y : Attribute
         {
-            FieldInfo[] fields = ReflectionCache<E>.Fields;
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
 
-            var dict = new Dictionary<string, ValueAttribute<E, Y>>(fields.Length);
+            var dict = new Dictionary<string, ValueAttribute<TEnum, Y>>(fields.Length);
 
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                dict[field.Name] = new ValueAttribute<E, Y>((E)field.GetRawConstantValue(), field.GetCustomAttribute<Y>());
+                dict[field.Name] = new ValueAttribute<TEnum, Y>((TEnum)field.GetRawConstantValue(), field.GetCustomAttribute<Y>());
             }
 
             return dict;
@@ -678,16 +645,16 @@ namespace EnumUtilities
         /// </summary>
         /// <typeparam name="Y">The type of attribute</typeparam>
         /// <returns>Map of value to name and attribute</returns>
-        public static IReadOnlyDictionary<E, NameAttribute<Y>> GetValueNameAttribute<Y>()           
+        public static IReadOnlyDictionary<TEnum, NameAttribute<Y>> GetValueNameAttribute<Y>()           
             where Y : Attribute
         {
-            FieldInfo[] fields = ReflectionCache<E>.Fields;
-            var dict = new Dictionary<E, NameAttribute<Y>>(fields.Length);
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
+            var dict = new Dictionary<TEnum, NameAttribute<Y>>(fields.Length);
 
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                dict[(E)field.GetRawConstantValue()] = new NameAttribute<Y>(field.Name, field.GetCustomAttribute<Y>());
+                dict[(TEnum)field.GetRawConstantValue()] = new NameAttribute<Y>(field.Name, field.GetCustomAttribute<Y>());
             }
 
             return dict;
@@ -698,17 +665,17 @@ namespace EnumUtilities
         /// </summary>
         /// <typeparam name="Y">The type of attribute</typeparam>
         /// <returns>Map of value to attribute</returns>
-        public static IReadOnlyDictionary<E, Y> GetValueAttribute<Y>()
+        public static IReadOnlyDictionary<TEnum, Y> GetValueAttribute<Y>()
             where Y : Attribute
         {
-            FieldInfo[] fields = ReflectionCache<E>.Fields;
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
 
-            var dict = new Dictionary<E, Y>(fields.Length);
+            var dict = new Dictionary<TEnum, Y>(fields.Length);
 
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                dict[(E)field.GetRawConstantValue()] = field.GetCustomAttribute<Y>();
+                dict[(TEnum)field.GetRawConstantValue()] = field.GetCustomAttribute<Y>();
             }
 
             return dict;
@@ -718,16 +685,16 @@ namespace EnumUtilities
         /// Generates a Dictionary of Enum Name to Enum Value
         /// </summary>
         /// <returns>Map of name to value</returns>
-        public static IReadOnlyDictionary<string, E> GetNameValue()
+        public static IReadOnlyDictionary<string, TEnum> GetNameValue()
         {
-            FieldInfo[] fields = ReflectionCache<E>.Fields;
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
 
-            var dict = new Dictionary<string, E>(fields.Length);
+            var dict = new Dictionary<string, TEnum>(fields.Length);
 
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                dict[field.Name] = (E)field.GetRawConstantValue();
+                dict[field.Name] = (TEnum)field.GetRawConstantValue();
             }
 
             return dict;
@@ -736,18 +703,17 @@ namespace EnumUtilities
         /// <summary>
         /// Generates a Dictionary of Enum Value to Enum Name
         /// </summary>
-        /// <typeparam name="T">An enumeration type</typeparam>
         /// <returns>Map of value to name</returns>
-        public static IReadOnlyDictionary<E, string> GetValueName()
+        public static IReadOnlyDictionary<TEnum, string> GetValueName()
         {
-            FieldInfo[] fields = ReflectionCache<E>.Fields;
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
 
-            var dict = new Dictionary<E, string>(fields.Length);
+            var dict = new Dictionary<TEnum, string>(fields.Length);
 
             for (int i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                dict[(E)field.GetRawConstantValue()] = field.Name;
+                dict[(TEnum)field.GetRawConstantValue()] = field.Name;
             }
 
             return dict;
