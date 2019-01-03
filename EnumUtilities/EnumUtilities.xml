@@ -74,7 +74,7 @@
             <param name="value">
             The string representation of the enumeration name or underlying value to convert.
             </param>
-            <param name="result">Contains an object of type <c>E</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+            <param name="result">Contains an object of type <c>TEnum</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
             <returns>
             true if the value parameter was converted successfully; otherwise, false.
             </returns>
@@ -88,7 +88,7 @@
             </summary>
             <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
             <param name="ignoreCase">true to ignore case; false to consider case.</param>
-            <param name="result">Contains an object of type <c>E</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+            <param name="result">Contains an object of type <c>TEnum</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
             <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
         </member>
         <member name="M:EnumUtilities.EnumUtil`1.BitwiseOr(`0,`0)">

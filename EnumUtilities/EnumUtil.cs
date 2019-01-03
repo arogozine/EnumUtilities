@@ -76,7 +76,7 @@ namespace EnumUtilities
         /// <param name="value">
         /// The string representation of the enumeration name or underlying value to convert.
         /// </param>
-        /// <param name="result">Contains an object of type <c>E</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+        /// <param name="result">Contains an object of type <c>TEnum</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
         /// <returns>
         /// true if the value parameter was converted successfully; otherwise, false.
         /// </returns>
@@ -91,7 +91,7 @@ namespace EnumUtilities
         /// </summary>
         /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
         /// <param name="ignoreCase">true to ignore case; false to consider case.</param>
-        /// <param name="result">Contains an object of type <c>E</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
+        /// <param name="result">Contains an object of type <c>TEnum</c> whose value is represented by <c>value</c> if the parse operation succeeds</param>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
         public static bool TryParse(string value, bool ignoreCase, out TEnum result)
             => Enum.TryParse(value, ignoreCase, out result);

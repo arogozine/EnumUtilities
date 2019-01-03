@@ -171,6 +171,14 @@ namespace EnumUtilTests
             var nameValue = EnumUtil<YourEnum>.GetNameValue();
             var valueName = EnumUtil<YourEnum>.GetValueName();
         }
-
+        
+        // C# 7.3
+        private static void YourFunction<TEnum>()
+            where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
+        {
+            // Call EnumUtilBase within the function
+            TEnum[] values = EnumUtil<TEnum>.GetValues();
+            // Your Code Here
+        }
     }
 }
