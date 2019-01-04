@@ -15,7 +15,9 @@ namespace EnumUtilTests.EmitPerformance
         {
             var dm = new DynamicMethod("HasFlag",
                 typeof(bool),
-                new[] { typeof(T), typeof(T) });
+                new[] { typeof(T), typeof(T) },
+                m: GetType().Module,
+                skipVisibility: true);
             ILGenerator generator = dm.GetILGenerator();
 
             generator.Emit(OpCodes.Ldarg_0);

@@ -15,7 +15,10 @@ namespace EnumUtilTests.EmitPerformance
         public Func<T, T> GenerateEmit<T>()
         {
             DynamicMethod dm =
-                new DynamicMethod("Not", typeof(T), new[] { typeof(T) });
+                new DynamicMethod("Not", typeof(T),
+                new[] { typeof(T) },
+                m: GetType().Module,
+                skipVisibility: true);
             ILGenerator lgen = dm.GetILGenerator();
             // IL_0000: ldarg.0
             // IL_0001: not

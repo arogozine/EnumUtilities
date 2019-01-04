@@ -40,12 +40,10 @@ namespace EnumUtilTests
             string[] names = EnumUtil<YourEnum>.GetNames();
 
             // Enum.TryParse(value, out result)
-            YourEnum possibleValue;
-            bool success = EnumUtil<YourEnum>.TryParse("foob", out possibleValue);
+            bool success = EnumUtil<YourEnum>.TryParse("foob", out YourEnum possibleValue);
 
             // Enum.TryParse(value, ignoreCase, out result)
-            YourEnum possibleValue2;
-            bool sucess2 = EnumUtil<YourEnum>.TryParse("foo", true, out possibleValue2);
+            bool sucess2 = EnumUtil<YourEnum>.TryParse("foo", true, out YourEnum possibleValue2);
 
             // Enum.IsDefined(typeof(T), name)
             bool isDef2 = EnumUtil<YourEnum>.IsDefined("Foo");

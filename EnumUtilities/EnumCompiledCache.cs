@@ -94,26 +94,6 @@ namespace EnumUtilities
                 .Compile();
         }
 
-        private static Func<TEnum, TEnum> BitwiseUnaryOperator(ExpressionType expressionType)
-        {
-            var val = Expression.Parameter(typeof(TEnum));
-
-            // Convert from Enum to Enum’s underlying type (byte, int, long, …)
-            // to allow bitwise functions to work
-            var valConverted = Expression.Convert(val, Enum.GetUnderlyingType(typeof(TEnum)));
-
-            var unaryExpression =
-                Expression.MakeUnary(
-                    expressionType,
-                    valConverted,
-                    null);
-
-            // Convert back to Enum
-            var backToEnumType = Expression.Convert(unaryExpression, typeof(TEnum));
-            return Expression.Lambda<Func<TEnum, TEnum>>(backToEnumType, val)
-                .Compile();
-        }
-
         private static Func<TEnum, TEnum, TEnum> GenerateUnsetFlag()
         {
             var val = Expression.Parameter(typeof(TEnum));
@@ -159,8 +139,25 @@ namespace EnumUtilities
             return BitwiseOperator(ExpressionType.ExclusiveOr);
         }
 
-        private static Func<TEnum, TEnum> GenerateBitwiseNot()
-            => BitwiseUnaryOperator(ExpressionType.Not);
+        private static Func<TEnum, TEnum> ()
+        {
+            var val = Expression.Parameter(typeof(TEnum));
+
+            // Convert from Enum to Enum’s underlying type (byte, int, long, …)
+            // to allow bitwise functions to work
+            var valConverted = Expression.Convert(val, Enum.GetUnderlyingType(typeof(TEnum)));
+
+            var unaryExpression =
+                Expression.MakeUnary(
+                    ExpressionType.Not,
+                    valConverted,
+                    null);
+
+            // Convert back to Enum
+            var backToEnumType = Expression.Convert(unaryExpression, typeof(TEnum));
+            return Expression.Lambda<Func<TEnum, TEnum>>(backToEnumType, val)
+                .Compile();
+        }
 
         #endregion
 
