@@ -139,7 +139,7 @@ namespace EnumUtilities
             return BitwiseOperator(ExpressionType.ExclusiveOr);
         }
 
-        private static Func<TEnum, TEnum> ()
+        private static Func<TEnum, TEnum> GenerateBitwiseNot()
         {
             var val = Expression.Parameter(typeof(TEnum));
 
