@@ -215,6 +215,7 @@ namespace EnumUtilTests
 
                 Assert.AreEqual(name, EnumUtil<TEnum>.GetName(value));
                 Assert.AreEqual(value, EnumUtil<TEnum>.Parse(name));
+                Assert.AreEqual(value, EnumUtil<TEnum>.QuickParse(name));
 
                 Type t = EnumUtil<TEnum>.GetUnderlyingType();
                 Assert.AreEqual(t, Enum.GetUnderlyingType(typeof(TEnum)));
@@ -303,6 +304,60 @@ namespace EnumUtilTests
         public void IsDefinedNullString()
         {
             Assert.IsFalse(EnumUtil<FlagsEnum>.IsDefined(null));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseException()
+        {
+            ByteEnum result = EnumUtil<ByteEnum>.Parse("Meh");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void QuickParseException()
+        {
+            ByteEnum result = EnumUtil<ByteEnum>.QuickParse("Meh");
+        }
+
+
+        [TestMethod]
+        public void Parse()
+        {
+            AreEqual<ByteEnum>(ByteEnum.Eight.ToString());
+            AreEqual<ByteEnum>(((byte)ByteEnum.Eight).ToString());
+
+            AreEqual<SByteEnum>(SByteEnum.Eight.ToString());
+            AreEqual<SByteEnum>(((sbyte)Int64Enum.Eight).ToString());
+
+            AreEqual<Int16Enum>(Int16Enum.Eight.ToString());
+            AreEqual<Int16Enum>(((short)Int16Enum.Eight).ToString());
+
+            AreEqual<UInt16Enum>(UInt16Enum.Eight.ToString());
+            AreEqual<UInt16Enum>(((ushort)UInt16Enum.Eight).ToString());
+
+            AreEqual<Int32Enum>(Int32Enum.Eight.ToString());
+            AreEqual<Int32Enum>(((int)Int32Enum.Eight).ToString());
+
+            AreEqual<UInt32Enum>(UInt32Enum.Eight.ToString());
+            AreEqual<UInt32Enum>(((uint)UInt32Enum.Eight).ToString());
+
+            AreEqual<Int64Enum>(Int64Enum.Eight.ToString());
+            AreEqual<Int64Enum>(((long)Int64Enum.Eight).ToString());
+
+            AreEqual<UInt64Enum>(UInt64Enum.Eight.ToString());
+            AreEqual<UInt64Enum>(((ulong)UInt64Enum.Eight).ToString());
+
+            void AreEqual<TEnum>(string value)
+                where TEnum: struct, Enum, IComparable, IFormattable, IConvertible
+            {
+                TEnum enumParse = (TEnum)Enum.Parse(typeof(TEnum), value);
+                TEnum wrapperParse = EnumUtil<TEnum>.Parse(value);
+                TEnum quickParse = EnumUtil<TEnum>.QuickParse(value);
+
+                Assert.AreEqual(enumParse, wrapperParse);
+                Assert.AreEqual(enumParse, quickParse);
+            }
         }
 
         [TestMethod]

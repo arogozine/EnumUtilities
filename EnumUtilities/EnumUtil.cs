@@ -26,6 +26,15 @@ namespace EnumUtilities
             => Enum.GetUnderlyingType(typeof(TEnum));
 
         /// <summary>
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+        /// Wrapper for <seealso cref="Enum.Parse(Type, string)"/>
+        /// </summary>
+        /// <param name="value">A string containing the name or value to convert.</param>
+        /// <returns>An object of type T whose value is represented by value.</returns>
+        public static TEnum Parse(string value)
+            => (TEnum)Enum.Parse(typeof(TEnum), value);
+
+        /// <summary>
         /// Returns the Name of a certain Enum Value.
         /// Wrapper for <seealso cref="Enum.GetName(Type, object)"/>
         /// </summary>
@@ -36,12 +45,11 @@ namespace EnumUtilities
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
-        /// Wrapper for <seealso cref="Enum.Parse(Type, string)"/>
         /// </summary>
         /// <param name="value">A string containing the name or value to convert.</param>
         /// <returns>An object of type T whose value is represented by value.</returns>
-        public static TEnum Parse(string value)
-            => (TEnum)Enum.Parse(typeof(TEnum), value);
+        public static TEnum QuickParse(string value)
+            => EnumCompiledCache<TEnum>.QuickParse(value);
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter specifies whether the operation is case-insensitive.
@@ -154,7 +162,7 @@ namespace EnumUtilities
         /// <param name="flag">An enumeration value</param>
         /// <returns>Value with the specified flag set</returns>
         public static TEnum SetFlag(TEnum value, TEnum flag)
-            => BitwiseOr(value, flag);
+            => EnumCompiledCache<TEnum>.BitwiseOr(value, flag);
 
         /// <summary>
         /// Returns the result of bitwise and for value and bitwise not of the flag.

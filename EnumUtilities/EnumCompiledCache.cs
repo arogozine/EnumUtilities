@@ -15,6 +15,48 @@ namespace EnumUtilities
     {
         #region Generate Functions
 
+        private static Func<string, TEnum> GenerateParse()
+        {
+            Type enumType = typeof(TEnum);
+            FieldInfo[] fields = ReflectionCache<TEnum>.Fields;
+            TEnum[] fieldValues = ReflectionCache<TEnum>.FieldValues;
+            Type underLyingType = enumType.GetEnumUnderlyingType();
+
+            var inputValue = Expression.Parameter(typeof(string), "value"); // (String value)
+
+            // Generate Switch Cases
+            var switchCases = new SwitchCase[fields.Length];
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                TEnum fieldEnum = fieldValues[i];
+                string fieldName = fields[i].Name;
+                string fieldValue = Convert.ChangeType(fieldEnum, underLyingType)
+                    .ToString();
+                
+                var switchCase = Expression.SwitchCase(
+                    Expression.Constant(fieldEnum),
+                    Expression.Constant(fieldName),
+                    Expression.Constant(fieldValue));
+
+                switchCases[i] = switchCase;
+            }
+
+            // Default Switch Case
+            var defaultException = Expression.Block(enumType,
+              Expression.Throw(
+                  Expression.New(typeof(ArgumentException)
+                    .GetConstructor(Type.EmptyTypes))
+              ),
+              Expression.Default(enumType));
+
+            return Expression.Lambda<Func<string, TEnum>>(
+                Expression.Block(enumType,
+                    Expression.Switch(inputValue, defaultException, switchCases)),
+                inputValue)
+                .Compile();
+        }
+
         private static Func<TEnum, Y> GenerateConvertTo<Y>() 
             where Y : struct, IComparable, IFormattable, IConvertible, IComparable<Y>, IEquatable<Y>
         {
@@ -248,5 +290,8 @@ namespace EnumUtilities
         internal static readonly Func<double, TEnum> FromDouble = GenerateConvertFrom<double>();
 
         #endregion
+
+        internal static readonly Func<string, TEnum> QuickParse = GenerateParse();
+
     }
 }

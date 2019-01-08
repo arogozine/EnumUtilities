@@ -4,7 +4,7 @@ using System.Reflection;
 namespace EnumUtilities
 {
     internal static class ReflectionCache<T>
-        where T : struct, IComparable, IFormattable, IConvertible
+        where T : struct, Enum, IComparable, IFormattable, IConvertible
     {
         static ReflectionCache()
         {

@@ -72,9 +72,8 @@ namespace EnumUtilTests
         [TestMethod]
         public void TestIsDefinedEnumPerformance()
         {
-            int i;
             // warmup
-            long gen = IsDefinedGenericEnum(out i);
+            long gen = IsDefinedGenericEnum(out int i);
             long std = IsDefinedStandardEnum(out i);
 
             // test
@@ -122,7 +121,6 @@ namespace EnumUtilTests
             Assert.IsTrue(isDefined);
             return watch.ElapsedMilliseconds;
         }
-
 
         public static long TestGeneric(out int i)
         {
@@ -177,6 +175,58 @@ namespace EnumUtilTests
             nat = TestSpeedNatural(out i);
 
             Assert.IsTrue(nat > gn);
+        }
+
+        [TestMethod]
+        public void TestQuickParse()
+        {
+            // Test that the new generic implementation
+            // is faster than the default implementation
+            // of .Parse(...)
+            
+            // warmup
+            long gn = TestGeneric(out int ii);
+            long nat = TestSpeedNatural(out ii);
+
+            // test
+            gn = TestGeneric(out ii);
+            nat = TestSpeedNatural(out ii);
+
+            Assert.IsTrue(nat > gn);
+
+            long TestSpeedNatural(out int i)
+            {
+                var watch = Stopwatch.StartNew();
+
+
+                string flag = FlagsEnum.Four.ToString();
+                FlagsEnum discardMe;
+
+                i = 0;
+                for (; i < 2000000; i++)
+                {
+                    discardMe = (FlagsEnum)Enum.Parse(typeof(FlagsEnum), flag);
+                }
+
+                watch.Stop();
+                return watch.ElapsedMilliseconds;
+            }
+
+            long TestGeneric(out int i)
+            {
+                var watch = Stopwatch.StartNew();
+
+                string flag = FlagsEnum.Four.ToString();
+                FlagsEnum discardMe;
+                i = 0;
+                for (; i < 2000000; i++)
+                {
+                    discardMe = EnumUtil<FlagsEnum>.QuickParse(flag);
+                }
+
+                watch.Stop();
+                return watch.ElapsedMilliseconds;
+            }
         }
     }
 }
