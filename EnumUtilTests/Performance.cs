@@ -120,60 +120,11 @@ namespace EnumUtilTests
                 return watch.ElapsedMilliseconds;
             }
         }
-        
-        [TestMethod]
-        public void TestHasFlagGenericSpeed()
-        {
-            // Test that the new generic implementation
-            // is faster than the default implementation
-            // of .HasFlag(...)
-            
-            // warmup
-            long gn = TestGeneric(out int ii);
-            long nat = TestSpeedNatural(out ii);
 
-            // test
-            gn = TestGeneric(out ii);
-            nat = TestSpeedNatural(out ii);
-
-            Assert.IsTrue(nat > gn);
-
-            long TestGeneric(out int i)
-            {
-                var watch = Stopwatch.StartNew();
-
-                FlagsEnum natural = FlagsEnum.Two | FlagsEnum.Four;
-                FlagsEnum flag = FlagsEnum.Four;
-
-                bool discardMe = false;
-                i = 0;
-                for (; i < 2000000; i++)
-                {
-                    discardMe = EnumUtil<FlagsEnum>.HasFlag(natural, flag);
-                }
-
-                watch.Stop();
-                return watch.ElapsedMilliseconds;
-            }
-
-            long TestSpeedNatural(out int i)
-            {
-                var watch = Stopwatch.StartNew();
-
-                FlagsEnum natural = FlagsEnum.Two | FlagsEnum.Four;
-                FlagsEnum flag = FlagsEnum.Four;
-
-                bool discardMe = false;
-                i = 0;
-                for (; i < 2000000; i++)
-                {
-                    discardMe = natural.HasFlag(flag);
-                }
-
-                watch.Stop();
-                return watch.ElapsedMilliseconds;
-            }
-        }
+        // HasFlag Test Removed
+        // HasFlag is now optimized by JIT
+        // Any wrapper around it will result in worse performance
+        // https://github.com/dotnet/coreclr/pull/13748
 
         [TestMethod]
         public void TestQuickParse()

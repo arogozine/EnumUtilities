@@ -4,13 +4,7 @@ using System.Reflection;
 
 namespace EnumUtilities
 {
-    /// <summary>
-    /// Uses Linq Expressions to compile Enum functions
-    /// 
-    /// (c) Alexandre Rogozine 2016
-    /// </summary>
-    /// <typeparam name="TEnum">Enum Type</typeparam>
-    internal static class EnumCompiledCache<TEnum>
+    public static partial class EnumUtil<TEnum>
         where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
     {
         #region Generate Functions
@@ -205,93 +199,93 @@ namespace EnumUtilities
 
         #region Is Defined
 
-        internal static readonly Func<sbyte, bool> IsDefinedSByte = GenerateIsDefined<sbyte>();
+        private static readonly Func<sbyte, bool> isDefinedSByte = GenerateIsDefined<sbyte>();
 
-        internal static readonly Func<byte, bool> IsDefinedByte = GenerateIsDefined<byte>();
+        private static readonly Func<byte, bool> isDefinedByte = GenerateIsDefined<byte>();
 
-        internal static readonly Func<ushort, bool> IsDefinedUInt16 = GenerateIsDefined<ushort>();
+        private static readonly Func<ushort, bool> isDefinedUInt16 = GenerateIsDefined<ushort>();
 
-        internal static readonly Func<short, bool> IsDefinedInt16 = GenerateIsDefined<short>();
+        private static readonly Func<short, bool> isDefinedInt16 = GenerateIsDefined<short>();
 
-        internal static readonly Func<uint, bool> IsDefinedUInt32 = GenerateIsDefined<uint>();
+        private static readonly Func<uint, bool> isDefinedUInt32 = GenerateIsDefined<uint>();
 
-        internal static readonly Func<int, bool> IsDefinedInt32 = GenerateIsDefined<int>();
+        private static readonly Func<int, bool> isDefinedInt32 = GenerateIsDefined<int>();
 
-        internal static readonly Func<ulong, bool> IsDefinedUInt64 = GenerateIsDefined<ulong>();
+        private static readonly Func<ulong, bool> isDefinedUInt64 = GenerateIsDefined<ulong>();
 
-        internal static readonly Func<long, bool> IsDefinedInt64 = GenerateIsDefined<long>();
+        private static readonly Func<long, bool> isDefinedInt64 = GenerateIsDefined<long>();
 
-        internal static readonly Func<float, bool> IsDefinedSingle = GenerateIsDefined<float>();
+        private static readonly Func<float, bool> isDefinedSingle = GenerateIsDefined<float>();
 
-        internal static readonly Func<double, bool> IsDefinedDouble = GenerateIsDefined<double>();
+        private static readonly Func<double, bool> isDefinedDouble = GenerateIsDefined<double>();
 
         #endregion
 
         #region Bitwise
 
-        internal static readonly Func<TEnum, TEnum, TEnum> UnsetFlag = GenerateUnsetFlag();
+        private static readonly Func<TEnum, TEnum, TEnum> unsetFlag = GenerateUnsetFlag();
 
-        internal static readonly Func<TEnum, TEnum, TEnum> BitwiseOr = GenerateBitwiseOr();
+        private static readonly Func<TEnum, TEnum, TEnum> bitwiseOr = GenerateBitwiseOr();
 
-        internal static readonly Func<TEnum, TEnum, TEnum> BitwiseAnd = GenerateBitwiseAnd();
+        private static readonly Func<TEnum, TEnum, TEnum> bitwiseAnd = GenerateBitwiseAnd();
 
-        internal static readonly Func<TEnum, TEnum, TEnum> BitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
+        private static readonly Func<TEnum, TEnum, TEnum> bitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
 
-        internal static readonly Func<TEnum, TEnum> BitwiseNot = GenerateBitwiseNot();
+        private static readonly Func<TEnum, TEnum> bitwiseNot = GenerateBitwiseNot();
 
-        internal static readonly Func<TEnum, TEnum, bool> HasFlag = GenerateHasFlag();
+        private static readonly Func<TEnum, TEnum, bool> hasFlag = GenerateHasFlag();
 
         #endregion
 
         #region To
 
-        internal static readonly Func<TEnum, ulong> ToUInt64 = GenerateConvertTo<ulong>();
+        private static readonly Func<TEnum, ulong> toUInt64 = GenerateConvertTo<ulong>();
 
-        internal static readonly Func<TEnum, long> ToInt64 = GenerateConvertTo<long>();
+        private static readonly Func<TEnum, long> toInt64 = GenerateConvertTo<long>();
 
-        internal static readonly Func<TEnum, uint> ToUInt32 = GenerateConvertTo<uint>();
+        private static readonly Func<TEnum, uint> toUInt32 = GenerateConvertTo<uint>();
 
-        internal static readonly Func<TEnum, int> ToInt32 = GenerateConvertTo<int>();
+        private static readonly Func<TEnum, int> toInt32 = GenerateConvertTo<int>();
 
-        internal static readonly Func<TEnum, ushort> ToUInt16 = GenerateConvertTo<ushort>();
+        private static readonly Func<TEnum, ushort> toUInt16 = GenerateConvertTo<ushort>();
 
-        internal static readonly Func<TEnum, short> ToInt16 = GenerateConvertTo<short>();
+        private static readonly Func<TEnum, short> toInt16 = GenerateConvertTo<short>();
 
-        internal static readonly Func<TEnum, byte> ToByte = GenerateConvertTo<byte>();
+        private static readonly Func<TEnum, byte> toByte = GenerateConvertTo<byte>();
 
-        internal static readonly Func<TEnum, sbyte> ToSByte = GenerateConvertTo<sbyte>();
+        private static readonly Func<TEnum, sbyte> toSByte = GenerateConvertTo<sbyte>();
 
-        internal static readonly Func<TEnum, float> ToSingle = GenerateConvertTo<float>();
+        private static readonly Func<TEnum, float> toSingle = GenerateConvertTo<float>();
 
-        internal static readonly Func<TEnum, double> ToDouble = GenerateConvertTo<double>();
+        private static readonly Func<TEnum, double> toDouble = GenerateConvertTo<double>();
 
         #endregion
 
         #region From
 
-        internal static readonly Func<ulong, TEnum> FromUInt64 = GenerateConvertFrom<ulong>();
+        private static readonly Func<ulong, TEnum> fromUInt64 = GenerateConvertFrom<ulong>();
 
-        internal static readonly Func<long, TEnum> FromInt64 = GenerateConvertFrom<long>();
+        private static readonly Func<long, TEnum> fromInt64 = GenerateConvertFrom<long>();
 
-        internal static readonly Func<uint, TEnum> FromUInt32 = GenerateConvertFrom<uint>();
+        private static readonly Func<uint, TEnum> fromUInt32 = GenerateConvertFrom<uint>();
 
-        internal static readonly Func<int, TEnum> FromInt32 = GenerateConvertFrom<int>();
+        private static readonly Func<int, TEnum> fromInt32 = GenerateConvertFrom<int>();
 
-        internal static readonly Func<ushort, TEnum> FromUInt16 = GenerateConvertFrom<ushort>();
+        private static readonly Func<ushort, TEnum> fromUInt16 = GenerateConvertFrom<ushort>();
 
-        internal static readonly Func<short, TEnum> FromInt16 = GenerateConvertFrom<short>();
+        private static readonly Func<short, TEnum> fromInt16 = GenerateConvertFrom<short>();
 
-        internal static readonly Func<byte, TEnum> FromByte = GenerateConvertFrom<byte>();
+        private static readonly Func<byte, TEnum> fromByte = GenerateConvertFrom<byte>();
 
-        internal static readonly Func<sbyte, TEnum> FromSByte = GenerateConvertFrom<sbyte>();
+        private static readonly Func<sbyte, TEnum> fromSByte = GenerateConvertFrom<sbyte>();
 
-        internal static readonly Func<float, TEnum> FromSingle = GenerateConvertFrom<float>();
+        private static readonly Func<float, TEnum> fromSingle = GenerateConvertFrom<float>();
 
-        internal static readonly Func<double, TEnum> FromDouble = GenerateConvertFrom<double>();
+        private static readonly Func<double, TEnum> fromDouble = GenerateConvertFrom<double>();
 
         #endregion
 
-        internal static readonly Func<string, TEnum> QuickParse = GenerateParse();
+        private static readonly Func<string, TEnum> quickParse = GenerateParse();
 
     }
 }
