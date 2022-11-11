@@ -232,6 +232,22 @@ namespace EnumUtilTests
         }
 
         [TestMethod]
+        public void FlagwiseNot()
+        {
+            var value = FlagsEnum.One | FlagsEnum.Eight;
+            Assert.AreEqual(FlagsEnum.Two | FlagsEnum.Four, EnumUtil<FlagsEnum>.FlagwiseNot(value));
+
+            var overlappingValue = OverlappingValuesFlagsEnum.OneOrFour;
+            Assert.AreEqual(OverlappingValuesFlagsEnum.Two | OverlappingValuesFlagsEnum.Eight, EnumUtil<OverlappingValuesFlagsEnum>.FlagwiseNot(overlappingValue));
+            Assert.AreEqual(OverlappingValuesFlagsEnum.All, EnumUtil<OverlappingValuesFlagsEnum>.FlagwiseNot(default));
+            Assert.AreEqual(EnumUtil<OverlappingValuesFlagsEnum>.FlagwiseNot(default), OverlappingValuesFlagsEnum.All);
+            foreach (var anotherOverlappingValue in EnumUtil<OverlappingValuesFlagsEnum>.GetValues())
+            {
+                Assert.AreEqual(anotherOverlappingValue, EnumUtil<OverlappingValuesFlagsEnum>.FlagwiseNot(EnumUtil<OverlappingValuesFlagsEnum>.FlagwiseNot(anotherOverlappingValue)));
+            }
+        }
+
+        [TestMethod]
         public void SetFlag()
         {
             var value = default(FlagsEnum);

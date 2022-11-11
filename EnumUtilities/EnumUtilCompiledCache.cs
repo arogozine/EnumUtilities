@@ -195,6 +195,36 @@ namespace EnumUtilities
                 .Compile();
         }
 
+        private static Func<TEnum, TEnum> GenerateFlagwiseNot(Func<TEnum, TEnum, TEnum> bitwiseOr)
+        {
+            var val = Expression.Parameter(typeof(TEnum));
+
+            // Convert from Enum to Enum.'s underlying type (byte, int, long, …)
+            // to allow bitwise functions to work.
+            var valConverted = Expression.Convert(val, Enum.GetUnderlyingType(typeof(TEnum)));
+
+            // ~val
+            var notExpression = Expression.MakeUnary(ExpressionType.Not, valConverted, null);
+
+            // Calculate the value that corresponds to all flags being set.
+            // We can AND this with the bitwise not to restrict the set flags to
+            // actual flags.
+            var allSetValue = default(TEnum);
+            foreach (var flagValue in GetValues())
+            {
+                allSetValue = bitwiseOr(allSetValue, flagValue);
+            }
+            var allSetValueConverted = Expression.Convert(Expression.Constant(allSetValue), Enum.GetUnderlyingType(typeof(TEnum)));
+
+            // (~val) & allSetValue
+            var andExpression = Expression.And(notExpression, allSetValueConverted);
+
+            // Convert back to Enum
+            var backToEnumType = Expression.Convert(andExpression, typeof(TEnum));
+            return Expression.Lambda<Func<TEnum, TEnum>>(backToEnumType, val)
+                .Compile();
+        }
+
         #endregion
 
         #region Is Defined
@@ -232,6 +262,8 @@ namespace EnumUtilities
         private static readonly Func<TEnum, TEnum, TEnum> bitwiseExclusiveOr = GenerateBitwiseExclusiveOr();
 
         private static readonly Func<TEnum, TEnum> bitwiseNot = GenerateBitwiseNot();
+
+        private static readonly Func<TEnum, TEnum> flagwiseNot = GenerateFlagwiseNot(bitwiseOr: bitwiseOr);
 
         private static readonly Func<TEnum, TEnum, bool> hasFlag = GenerateHasFlag();
 
