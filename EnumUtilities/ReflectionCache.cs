@@ -8,7 +8,7 @@ namespace EnumUtilities
     {
         static ReflectionCache()
         {
-            var fields = typeof(T)
+            FieldInfo[] fields = typeof(T)
                 .GetFields(BindingFlags.Public | BindingFlags.Static);
 
             T[] values = new T[fields.Length];

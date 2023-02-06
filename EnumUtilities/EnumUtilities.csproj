@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <FileVersion>4.0.0.0</FileVersion>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
     <Description>Provides generic enum functions such as bitwise operations, fast HasFlag, and others.</Description>
     <Authors>Alexandre Rogozine</Authors>
-    <Version>4.0.0</Version>
-    <Copyright>Copyright Alexandre Rogozine © 2020</Copyright>
+    <Version>5.0.0</Version>
+    <Copyright>Copyright Alexandre Rogozine © 2023</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageId>EnumUtilities</PackageId>
     <PackageProjectUrl>https://github.com/arogozine/EnumUtilities</PackageProjectUrl>
@@ -18,10 +18,7 @@
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Alex\Source\Repos\EnumUtilities\EnumUtilities\EnumUtilities.xml</DocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>
