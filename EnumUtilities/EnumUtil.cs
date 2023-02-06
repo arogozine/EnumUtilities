@@ -144,6 +144,13 @@ namespace EnumUtilities
             => bitwiseNot(value);
 
         /// <summary>
+        /// Invert the flags (setting all single-bit flags which are not set and unsetting all single-bit flags which are set).
+        /// </summary>
+        /// <returns><c>value</c> with all flags inverted</returns>
+        public static TEnum FlagwiseNot(TEnum value)
+            => flagwiseNot(value);
+
+        /// <summary>
         /// Checks whether a flag exists.
         /// This function does not check for <c>FlagsAttribute</c>.
         /// </summary>
